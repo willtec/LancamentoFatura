@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($usuario) {
         $_SESSION['usuario'] = $usuario;
-        redirecionar('/dashboard');
+        redirecionar('../views/dashboard');
     } else {
         setMensagem('erro', 'Email ou senha incorretos.');
         include '../views/login.php';
