@@ -1,46 +1,46 @@
 <?php
-// Importar configurações globais
-require_once '../config/db.php';
-require_once '../config/auth.php';
-require_once '../config/helpers.php';
-require_once '../config/constants.php'; // Inclua a constante BASE_URL
+// Incluindo configurações globais e dependências necessárias
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/auth.php';
+require_once __DIR__ . '/config/helpers.php';
+require_once __DIR__ . '/config/constants.php'; // Inclui BASE_URL
 
-// Capturar a URL solicitada e remover qualquer parâmetro GET
+// Capturando a URL solicitada
 $request = $_SERVER['REQUEST_URI'];
-$request = strtok($request, '?'); // Ignorar parâmetros GET
+$request = strtok($request, '?'); // Removendo parâmetros GET da URL, se existirem
 
 // Roteamento baseado na URL
 switch ($request) {
-    case '/':
-    case '/dashboard':
-        include '../views/dashboard.php';
+    case '/': // Página inicial
+    case '/dashboard': // Painel principal do sistema
+        include __DIR__ . '/views/dashboard.php';
         break;
 
-    case '/login':
-        include '../controllers/LoginController.php';
+    case '/login': // Rota para o login
+        include __DIR__ . '/views/login.php';
         break;
 
-    case '/logout':
-        include '../controllers/LogoutController.php';
+    case '/logout': // Rota para sair do sistema
+        include __DIR__ . '/controllers/LogoutController.php';
         break;
 
-    case '/faturas':
-        include '../controllers/FaturaController.php';
+    case '/faturas': // Listar faturas
+        include __DIR__ . '/controllers/FaturaController.php';
         break;
 
-    case '/faturas/cadastrar':
-        include '../views/faturas/cadastrar.php';
+    case '/faturas/cadastrar': // Formulário de cadastro de faturas
+        include __DIR__ . '/views/faturas/cadastrar.php';
         break;
 
-    case '/transportadoras':
-        include '../controllers/TransportadoraController.php';
+    case '/transportadoras': // Listar transportadoras
+        include __DIR__ . '/controllers/TransportadoraController.php';
         break;
 
-    case '/transportadoras/cadastrar':
-        include '../views/transportadoras/cadastrar.php';
+    case '/transportadoras/cadastrar': // Formulário de cadastro de transportadoras
+        include __DIR__ . '/views/transportadoras/cadastrar.php';
         break;
 
-    default:
+    default: // Página não encontrada
         http_response_code(404);
         echo "<h1>404 - Página não encontrada</h1>";
         break;

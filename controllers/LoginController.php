@@ -13,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($usuario) {
         $_SESSION['usuario'] = $usuario;
-        redirecionar('../views/dashboard');
+        redirecionar('/dashboard'); // Direciona para o painel
     } else {
         setMensagem('erro', 'Email ou senha incorretos.');
-        include '../views/login.php';
+        include __DIR__ . '/../views/login.php'; // Exibe a página de login corretamente
     }
 } else {
-    include '../views/login.php';
+    include __DIR__ . '/../views/login.php'; // Exibe a página de login para GET
 }
 ?>

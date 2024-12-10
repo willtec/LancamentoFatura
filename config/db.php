@@ -1,6 +1,6 @@
 <?php
 define('DB_HOST', 'localhost');
-define('DB_USER', 'will');
+define('DB_USER', 'root');
 define('DB_PASS', 'Reboot3!');
 define('DB_NAME', 'faturas');
 
