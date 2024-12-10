@@ -3,12 +3,13 @@
 require_once '../config/db.php';
 require_once '../config/auth.php';
 require_once '../config/helpers.php';
+require_once '../config/constants.php'; // Inclua a constante BASE_URL
 
-// Verificar a URL solicitada
+// Capturar a URL solicitada e remover qualquer parâmetro GET
 $request = $_SERVER['REQUEST_URI'];
 $request = strtok($request, '?'); // Ignorar parâmetros GET
 
-// Roteamento básico
+// Roteamento baseado na URL
 switch ($request) {
     case '/':
     case '/dashboard':
