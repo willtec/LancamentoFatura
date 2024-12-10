@@ -1,26 +1,26 @@
 <?php
-// Incluindo configurações globais
+// Incluindo configurações globais e dependências necessárias
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/../config/helpers.php';
-require_once __DIR__ . '/../config/constants.php';
+require_once __DIR__ . '/../config/constants.php'; // Inclui BASE_URL
 
 // Capturando a URL solicitada
 $request = $_SERVER['REQUEST_URI'];
-$request = strtok($request, '?'); // Ignorar parâmetros GET
+$request = strtok($request, '?'); // Removendo parâmetros GET da URL, se existirem
 
 // Roteamento baseado na URL
 switch ($request) {
     case '/': // Página inicial
-    case '/dashboard':
+    case '/dashboard': // Painel principal do sistema
         include __DIR__ . '/../views/dashboard.php';
         break;
 
-    case '/login': // Página de login
-        include __DIR__ . '/../controllers/LoginController.php';
+    case '/login': // Rota para o login
+        include __DIR__ . '/../views/login.php';
         break;
 
-    case '/logout': // Página de logout
+    case '/logout': // Rota para sair do sistema
         include __DIR__ . '/../controllers/LogoutController.php';
         break;
 
