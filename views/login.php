@@ -83,7 +83,7 @@
         <div class="login-header">
             <h1>Fazer Login</h1>
         </div>
-        <form method="POST" action="/login">
+        <form method="POST" action="/LancamentoFatura/login">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required placeholder="Seu email">

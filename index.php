@@ -1,5 +1,5 @@
 <?php
-// Iniciar a sessão apenas se não estiver ativa
+// Iniciar a sessão se não estiver ativa
 if (session_status() == PHP_SESSION_NONE) {
     session_start(); // Inicia a sessão se não estiver ativa
 }
@@ -21,7 +21,7 @@ switch ($request) {
         include __DIR__ . '/views/dashboard.php';
         break;
 
-    case '/login':
+    case '/login': // Rota para o login
         include __DIR__ . '/views/login.php';
         break;
 
