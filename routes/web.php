@@ -1,9 +1,9 @@
 <?php
 // Incluindo configurações globais e dependências necessárias
-require_once __DIR__ . '/../config/db.php';
-require_once __DIR__ . '/../config/auth.php';
-require_once __DIR__ . '/../config/helpers.php';
-require_once __DIR__ . '/../config/constants.php'; // Inclui BASE_URL
+require_once 'C:/tools/Apache24/htdocs/LancamentoFatura/config/db.php';
+require_once 'C:/tools/Apache24/htdocs/LancamentoFatura/config/auth.php';
+require_once 'C:/tools/Apache24/htdocs/LancamentoFatura/config/helpers.php';
+require_once 'C:/tools/Apache24/htdocs/LancamentoFatura/config/constants.php'; // Inclui BASE_URL
 
 // Capturando a URL solicitada
 $request = $_SERVER['REQUEST_URI'];
@@ -13,31 +13,31 @@ $request = strtok($request, '?'); // Removendo parâmetros GET da URL, se existi
 switch ($request) {
     case '/': // Página inicial
     case '/dashboard': // Painel principal do sistema
-        include __DIR__ . '/../views/dashboard.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/views/dashboard.php';
         break;
 
     case '/login': // Rota para o login
-        include __DIR__ . '/../views/login.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/views/login.php';
         break;
 
     case '/logout': // Rota para sair do sistema
-        include __DIR__ . '/../controllers/LogoutController.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/controllers/LogoutController.php';
         break;
 
     case '/faturas': // Listar faturas
-        include __DIR__ . '/../controllers/FaturaController.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/controllers/FaturaController.php';
         break;
 
     case '/faturas/cadastrar': // Formulário de cadastro de faturas
-        include __DIR__ . '/../views/faturas/cadastrar.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/views/faturas/cadastrar.php';
         break;
 
     case '/transportadoras': // Listar transportadoras
-        include __DIR__ . '/../controllers/TransportadoraController.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/controllers/TransportadoraController.php';
         break;
 
     case '/transportadoras/cadastrar': // Formulário de cadastro de transportadoras
-        include __DIR__ . '/../views/transportadoras/cadastrar.php';
+        include 'C:/tools/Apache24/htdocs/LancamentoFatura/views/transportadoras/cadastrar.php';
         break;
 
     default: // Página não encontrada
