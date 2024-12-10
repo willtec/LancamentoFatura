@@ -3,28 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Transportadora</title>
+    <link rel="stylesheet" href="../../public/styles/cadastrar.css">
 </head>
 <body>
-    <h1>Cadastrar Nova Transportadora</h1>
-    <form method="POST" action="/transportadoras">
-        <label for="codigo">Código:</label>
-        <input type="text" name="codigo" id="codigo" required>
-        <br>
-        <label for="nome">Nome:</label>
-        <input type="text" name="nome" id="nome" required>
-        <br>
-        <label for="cnpj">CNPJ:</label>
-        <input type="text" name="cnpj" id="cnpj" required>
-        <br>
-        <button type="submit">Cadastrar</button>
-    </form>
+    <div class="container">
+        <h1>Cadastrar Nova Transportadora</h1>
+        <form method="POST" action="/transportadoras">
+            <label for="codigo">Código:</label>
+            <input type="text" name="codigo" id="codigo" required>
 
-    <h2>Importar Transportadoras</h2>
-    <form method="POST" enctype="multipart/form-data" action="/transportadoras">
-        <label for="csv_import">Arquivo CSV:</label>
-        <input type="file" name="csv_import" id="csv_import" accept=".csv" required>
-        <br>
-        <button type="submit">Importar</button>
-    </form>
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" required>
+
+            <label for="cnpj">CNPJ:</label>
+            <input type="text" name="cnpj" id="cnpj" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <div class="import-section">
+            <h1>Importar Transportadoras</h1>
+            <form method="POST" enctype="multipart/form-data" action="/transportadoras">
+                <label for="csv_import">Arquivo CSV:</label>
+                <input type="file" name="csv_import" id="csv_import" accept=".csv" required>
+
+                <button type="submit">Importar</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

@@ -16,7 +16,7 @@ switch ($request) {
         include '../views/dashboard.php';
         break;
 
-    case '/login': // Rota para o login
+    case '/login.php': // Rota para o login
         include '../controllers/LoginController.php';
         break;
 
