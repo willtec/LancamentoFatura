@@ -11,9 +11,9 @@
         <header>
             <h1>Bem-vindo, <?= $_SESSION['usuario']['nome'] ?></h1>
             <nav>
-                <a href="/faturas">Faturas</a>
-                <a href="/transportadoras">Transportadoras</a>
-                <a href="/logout" class="logout">Sair</a>
+                <a href="/LancamentoFatura/faturas">Faturas</a>
+                <a href="/LancamentoFatura/transportadoras">Transportadoras</a>
+                <a href="/LancamentoFatura/logout" class="logout">Sair</a>
             </nav>
         </header>
 

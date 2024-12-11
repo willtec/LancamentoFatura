@@ -1,23 +1,39 @@
 <?php
-require_once '../config/db.php';
+require_once(__DIR__ . '/../config/db.php');
 
 class Fatura {
-    // Método para listar todas as faturas
-    public static function listar() {
-        global $pdo;
-        $stmt = $pdo->query("
-            SELECT f.*, t.nome AS transportadora 
-            FROM faturas f
-            LEFT JOIN transportadora t ON f.transportadora_id = t.id
-        ");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    /**
+     * Lista todas as faturas.
+     *
+     * @return array|false Retorna um array com todas as faturas ou false em caso de erro.
+     */
+    public static function listarTodas() {
+        try {
+            $pdo = getDBConnection(); // Obter conexão com o banco de dados
+            $query = "
+                SELECT f.*, t.nome AS transportadora 
+                FROM faturas f
+                LEFT JOIN transportadora t ON f.transportadora_id = t.id
+            ";
+            $stmt = $pdo->query($query);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao listar faturas: " . $e->getMessage());
+            return false;
+        }
     }
 
-    // Método para criar uma nova fatura
-    public static function criar($dados, $boleto, $arquivos_cte) {
-        global $pdo;
-
+    /**
+     * Cria uma nova fatura.
+     *
+     * @param array $dados Dados da fatura.
+     * @param array $boleto Arquivo do boleto.
+     * @param array $arquivos_cte Arquivo(s) do CTe.
+     * @return bool Retorna true se a fatura foi criada com sucesso, false em caso de erro.
+     */
+    public static function cadastrar($dados) {
         try {
+            $pdo = getDBConnection(); // Obter conexão com o banco de dados
             $pdo->beginTransaction();
 
             // Processar upload dos arquivos
@@ -25,8 +41,12 @@ class Fatura {
             $boleto_path = UPLOAD_PDFS . $numero_fatura . '.pdf';
             $cte_path = UPLOAD_XMLS . $numero_fatura . '.zip';
 
-            move_uploaded_file($boleto['tmp_name'], $boleto_path);
-            move_uploaded_file($arquivos_cte['tmp_name'], $cte_path);
+            if (!move_uploaded_file($dados['boleto']['tmp_name'], $boleto_path)) {
+                throw new Exception("Erro ao mover o arquivo do boleto.");
+            }
+            if (!move_uploaded_file($dados['arquivos_cte']['tmp_name'], $cte_path)) {
+                throw new Exception("Erro ao mover os arquivos de CTe.");
+            }
 
             // Inserir a fatura no banco de dados
             $stmt = $pdo->prepare("
@@ -45,6 +65,7 @@ class Fatura {
             $pdo->commit();
             return true;
         } catch (Exception $e) {
+            error_log("Erro ao criar fatura: " . $e->getMessage());
             $pdo->rollBack();
             return false;
         }
