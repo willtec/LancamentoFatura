@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario'])) {
     redirecionar('/login');
 }
 
-// Processar o cadastro de uma nova fatura
+// Verificar se é uma requisição POST (para cadastrar fatura)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validação de dados enviados pelo formulário
     $transportadora_id = filter_input(INPUT_POST, 'transportadora_id', FILTER_VALIDATE_INT);
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (!$transportadora_id || !$numero_fatura || !$vencimento || !$valor) {
         setMensagem('erro', 'Dados inválidos. Preencha o formulário corretamente.');
-        include '../views/faturas/cadastrar.php';
+        include __DIR__ . '/../views/faturas/cadastrar.php';
         exit();
     }
 
@@ -50,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirecionar('/faturas');
     } else {
         setMensagem('erro', 'Erro ao cadastrar a fatura.');
-        include '../views/faturas/cadastrar.php';
+        include __DIR__ . '/../views/faturas/cadastrar.php';
     }
     exit();
 }
 
-// Listar todas as faturas
+// Caso contrário, se for GET, lista as faturas
 $faturas = Fatura::listarTodas();
 include __DIR__ . '/../views/faturas/listar.php';
 

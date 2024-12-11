@@ -39,7 +39,10 @@ switch ($request) {
         break;
 
     case '/LancamentoFatura/faturas/cadastrar':
-        include __DIR__ . '/../views/faturas/cadastrar.php';
+        // Redireciona para o método de cadastro do controlador
+        include __DIR__ . '/../controllers/FaturaController.php';
+        $controller = new FaturaController();
+        $controller->cadastrar();
         break;
 
     case '/LancamentoFatura/transportadoras':
