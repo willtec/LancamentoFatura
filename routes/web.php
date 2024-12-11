@@ -38,11 +38,9 @@ switch ($request) {
         include __DIR__ . '/../controllers/FaturaController.php';
         break;
 
+    // Alteração: Corrigindo a URL para o arquivo de cadastro
     case '/LancamentoFatura/faturas/cadastrar':
-        // Redireciona para o método de cadastro do controlador
-        include __DIR__ . '/../controllers/FaturaController.php';
-        $controller = new FaturaController();
-        $controller->cadastrar();
+        include __DIR__ . '/../views/faturas/cadastrar.php';
         break;
 
     case '/LancamentoFatura/transportadoras':
@@ -56,6 +54,6 @@ switch ($request) {
     default:
         // Página não encontrada
         http_response_code(404);
-        echo "<h1>404 - Página $request não encontrada</h1>";
+        echo "404 - Página $request não encontrada";
         break;
 }

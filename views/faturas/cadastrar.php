@@ -2,32 +2,38 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Lançar Fatura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Fatura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/../public/styles/cadastrar_fatura.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Lançar Nova Fatura</h1>
-    <form method="POST" enctype="multipart/form-data" action="/faturas">
-        <label for="transportadora">Transportadora:</label>
-        <select name="transportadora_id" id="transportadora">
-            <!-- Opções preenchidas dinamicamente -->
-        </select>
-        <br>
-        <label for="numero_fatura">Número da Fatura:</label>
-        <input type="text" name="numero_fatura" id="numero_fatura" required>
-        <br>
-        <label for="vencimento">Data de Vencimento:</label>
-        <input type="date" name="vencimento" id="vencimento" required>
-        <br>
-        <label for="valor">Valor:</label>
-        <input type="number" step="0.01" name="valor" id="valor" required>
-        <br>
-        <label for="boleto">Boleto (PDF):</label>
-        <input type="file" name="boleto" id="boleto" accept="application/pdf" required>
-        <br>
-        <label for="arquivos_cte">Arquivos XML (ZIP):</label>
-        <input type="file" name="arquivos_cte" id="arquivos_cte" accept=".zip" required>
-        <br>
-        <button type="submit">Lançar</button>
-    </form>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white shadow-lg rounded-lg">
+            <h1 class="text-2xl font-bold text-center py-4">Cadastro de Fatura</h1>
+
+            <form action="/LancamentoFatura/faturas/cadastrar" method="POST" class="space-y-4">
+                <!-- Campos do formulário -->
+                <div>
+                    <label for="transportadora" class="block text-sm font-medium">Transportadora</label>
+                    <input type="text" name="transportadora" id="transportadora" class="w-full px-4 py-2 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="valor" class="block text-sm font-medium">Valor</label>
+                    <input type="number" name="valor" id="valor" class="w-full px-4 py-2 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="vencimento" class="block text-sm font-medium">Data de Vencimento</label>
+                    <input type="date" name="vencimento" id="vencimento" class="w-full px-4 py-2 border rounded-md" required>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Cadastrar Fatura
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+</html>
 </html>

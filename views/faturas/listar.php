@@ -18,16 +18,15 @@
                     <h1 class="text-2xl font-bold">Gerenciamento de Faturas</h1>
                     <p class="text-sm text-blue-200">Visualize e gerencie suas faturas</p>
                 </div>
-                <a href="?cadastrar=true" class="btn-primary">
+                <!-- Alteração do link de cadastro -->
+                <a href="/LancamentoFatura/faturas/cadastrar" class="btn-primary">
                     <i class="fas fa-plus-circle mr-2"></i> Nova Fatura
                 </a>
             </div>
 
             <?php
             // Verificar se o parâmetro "cadastrar" está na URL
-            if (isset($_GET['cadastrar']) && $_GET['cadastrar'] == 'true') {
-                include __DIR__ . '/../faturas/cadastrar.php';  // Incluir o formulário de cadastro
-            }
+            // Não será mais necessário, pois a navegação já está controlada pela rota
             ?>
 
             <!-- Filters -->
