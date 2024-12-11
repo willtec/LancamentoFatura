@@ -1,24 +1,37 @@
 <?php
-require_once '../models/Usuario.php';
-require_once '../config/helpers.php';
+require_once(__DIR__ . '/../models/Usuario.php');
+require_once(__DIR__ . '/../config/helpers.php');
 
-session_start();
+// Iniciar a sessão apenas se não estiver ativa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
+    // Capturar os dados do formulário
+    $email = trim($_POST['email']);
+    $senha = trim($_POST['senha']);
+
+    // Validar se os campos foram preenchidos
+    if (empty($email) || empty($senha)) {
+        $erro = 'Email e senha são obrigatórios.';
+        include __DIR__ . '/../views/login.php';
+        exit();
+    }
 
     // Autenticação
     $usuario = Usuario::autenticar($email, $senha);
 
     if ($usuario) {
+        // Usuário autenticado, salvar na sessão
         $_SESSION['usuario'] = $usuario;
-        redirecionar('/dashboard'); // Direciona para o painel
+        redirecionar('/LancamentoFatura/dashboard');
     } else {
-        setMensagem('erro', 'Email ou senha incorretos.');
-        include __DIR__ . '/../views/login.php'; // Exibe a página de login corretamente
+        // Falha na autenticação
+        $erro = 'Email ou senha incorretos.';
+        include __DIR__ . '/../views/login.php';
     }
 } else {
-    include __DIR__ . '/../views/login.php'; // Exibe a página de login para GET
+    // Se não for POST, exibir o formulário de login
+    include __DIR__ . '/../views/login.php';
 }
-?>

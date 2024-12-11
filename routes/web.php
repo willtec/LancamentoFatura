@@ -1,48 +1,58 @@
 <?php
-// Incluindo configurações globais e dependências necessárias
-require_once __DIR__ . '/config/db.php';
-require_once __DIR__ . '/config/auth.php';
-require_once __DIR__ . '/config/helpers.php';
-require_once __DIR__ . '/config/constants.php'; // Inclui BASE_URL
+// Este arquivo gerencia as rotas do sistema
 
-// Capturando a URL solicitada
+// Iniciar a sessão apenas se não estiver ativa
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Definir as rotas disponíveis no sistema
 $request = $_SERVER['REQUEST_URI'];
-$request = strtok($request, '?'); // Removendo parâmetros GET da URL, se existirem
+$request = strtok($request, '?'); // Ignorar parâmetros GET na URL
 
-// Roteamento baseado na URL
 switch ($request) {
-    case '/': // Página inicial
-    case '/dashboard': // Painel principal do sistema
-        include __DIR__ . '/views/dashboard.php';
+    case '/':
+    case '/LancamentoFatura/':
+    case '/LancamentoFatura/dashboard':
+        // Verificar autenticação
+        if (!isset($_SESSION['usuario'])) {
+            header('Location: /LancamentoFatura/login');
+            exit();
+        }
+        include __DIR__ . '/../views/dashboard.php';
         break;
 
-    case '/login': // Rota para o login
-        include __DIR__ . '/views/login.php';
+    case '/LancamentoFatura/login':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            include __DIR__ . '/../controllers/LoginController.php';
+        } else {
+            include __DIR__ . '/../views/login.php';
+        }
         break;
 
-    case '/logout': // Rota para sair do sistema
-        include __DIR__ . '/controllers/LogoutController.php';
+    case '/LancamentoFatura/logout':
+        include __DIR__ . '/../controllers/LogoutController.php';
         break;
 
-    case '/faturas': // Listar faturas
-        include __DIR__ . '/controllers/FaturaController.php';
+    case '/LancamentoFatura/faturas':
+        include __DIR__ . '/../controllers/FaturaController.php';
         break;
 
-    case '/faturas/cadastrar': // Formulário de cadastro de faturas
-        include __DIR__ . '/views/faturas/cadastrar.php';
+    case '/LancamentoFatura/faturas/cadastrar':
+        include __DIR__ . '/../views/faturas/cadastrar.php';
         break;
 
-    case '/transportadoras': // Listar transportadoras
-        include __DIR__ . '/controllers/TransportadoraController.php';
+    case '/LancamentoFatura/transportadoras':
+        include __DIR__ . '/../controllers/TransportadoraController.php';
         break;
 
-    case '/transportadoras/cadastrar': // Formulário de cadastro de transportadoras
-        include __DIR__ . '/views/transportadoras/cadastrar.php';
+    case '/LancamentoFatura/transportadoras/cadastrar':
+        include __DIR__ . '/../views/transportadoras/cadastrar.php';
         break;
 
-    default: // Página não encontrada
+    default:
+        // Página não encontrada
         http_response_code(404);
-        echo "<h1>404 - Página não encontrada</h1>";
+        echo "<h1>404 - Página $request não encontrada</h1>";
         break;
 }
-?>

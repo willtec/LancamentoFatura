@@ -1,52 +1,21 @@
 <?php
-// Iniciar a sessão se não estiver ativa
-if (session_status() == PHP_SESSION_NONE) {
-    session_start(); // Inicia a sessão se não estiver ativa
-}
 
-// Configurações e funções globais
-require_once __DIR__ . '/config/db.php';
-require_once __DIR__ . '/config/constants.php';
-require_once __DIR__ . '/config/auth.php';
-require_once __DIR__ . '/config/helpers.php';
+// Arquivo principal do sistema (index.php)
 
-// Capturar a URL solicitada
-$request = $_SERVER['REQUEST_URI'];
-$request = strtok($request, '?'); // Ignorar parâmetros GET
+// Inicia o autoload para carregar classes automaticamente
+spl_autoload_register(function ($class_name) {
+    $file = BASE_PATH . '/' . str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $class_name) . '.php';
+    if (file_exists($file)) {
+        require_once $file;
+    } else {
+        error_log("Arquivo da classe não encontrado: " . $file);
+    }
+});
 
-// Roteamento
-switch ($request) {
-    case '/':
-    case '/dashboard':
-        include __DIR__ . '/views/dashboard.php';
-        break;
+// Define as configurações iniciais
+define('BASE_PATH', __DIR__);
 
-    case '/login': // Rota para o login
-        include __DIR__ . '/views/login.php';
-        break;
+// Carrega o arquivo de rotas
+require_once BASE_PATH . '/routes/web.php';
 
-    case '/logout':
-        include __DIR__ . '/controllers/LogoutController.php';
-        break;
-
-    case '/faturas':
-        include __DIR__ . '/controllers/FaturaController.php';
-        break;
-
-    case '/faturas/cadastrar':
-        include __DIR__ . '/views/faturas/cadastrar.php';
-        break;
-
-    case '/transportadoras':
-        include __DIR__ . '/controllers/TransportadoraController.php';
-        break;
-
-    case '/transportadoras/cadastrar':
-        include __DIR__ . '/views/transportadoras/cadastrar.php';
-        break;
-
-    default: // Página não encontrada
-        http_response_code(404);
-        echo "<h1>404 - Página não encontrada</h1>";
-        break;
-}
+?>
