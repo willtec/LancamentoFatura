@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . '/../models/Transportadora.php');
-require_once(__DIR__ . '/../config/auth.php');
-require_once(__DIR__ . '/../config/helpers.php');
+require_once __DIR__ . '/../models/Transportadora.php';
+require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../config/helpers.php';
 
 // Verificar se o usuário está autenticado
 if (!isset($_SESSION['usuario'])) {
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dadosTransportadora = [
         'codigo' => $_POST['codigo'],
         'cnpj' => $_POST['cnpj'],
-        'nome' => $_POST['nome']
+        'nome' => $_POST['nome'],
     ];
 
     if (Transportadora::cadastrar($dadosTransportadora)) {
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Configurações de paginação
 $itensPorPagina = 10;
-$paginaAtual = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$paginaAtual = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $termoBusca = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Calcular offset
@@ -46,8 +46,7 @@ $dadosPaginacao = [
     'currentPage' => $paginaAtual,
     'totalPages' => $totalPaginas,
     'totalItems' => $totalTransportadoras,
-    'searchTerm' => $termoBusca
+    'searchTerm' => $termoBusca,
 ];
 
 include __DIR__ . '/../views/transportadoras/listar.php';
-?>

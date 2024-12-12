@@ -26,4 +26,3 @@ switch ($request) {
         echo json_encode(['erro' => 'Endpoint não encontrado']);
         break;
 }
-?>

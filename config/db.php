@@ -6,10 +6,11 @@ define('DB_NAME', 'faturas');
 
 /**
  * Função para obter a conexão com o banco de dados.
- * 
+ *
  * @return PDO Objeto de conexão PDO.
  */
-function getDBConnection() {
+function getDBConnection()
+{
     static $pdo = null; // Uso de singleton para evitar múltiplas conexões.
 
     if ($pdo === null) {
@@ -24,4 +25,3 @@ function getDBConnection() {
 
     return $pdo;
 }
-?>

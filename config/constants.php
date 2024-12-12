@@ -6,4 +6,3 @@ define('BASE_URL', 'http://localhost/LancamentoFatura');
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('UPLOAD_PDFS', UPLOAD_DIR . 'pdfs/');
 define('UPLOAD_XMLS', UPLOAD_DIR . 'xmls/');
-?>

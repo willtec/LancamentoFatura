@@ -19,12 +19,12 @@
             </div>
             <div class="search-container">
                 <form id="search-form" method="GET" action="/transportadoras/listar">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        placeholder="Buscar transportadora..." 
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Buscar transportadora..."
                         class="search-input"
-                        value="<?= htmlspecialchars($dadosPaginacao['searchTerm'] ?? '') ?>"
+                        value="<?=htmlspecialchars($dadosPaginacao['searchTerm'] ?? '')?>"
                     >
                     <button type="submit" class="btn-search">Buscar</button>
                 </form>
@@ -45,50 +45,50 @@
                     <?php if (!empty($dadosPaginacao['transportadoras'])): ?>
                         <?php foreach ($dadosPaginacao['transportadoras'] as $transportadora): ?>
                             <tr>
-                                <td><?= htmlspecialchars($transportadora['codigo']) ?></td>
-                                <td><?= htmlspecialchars($transportadora['nome']) ?></td>
-                                <td><?= htmlspecialchars($transportadora['cnpj']) ?></td>
+                                <td><?=htmlspecialchars($transportadora['codigo'])?></td>
+                                <td><?=htmlspecialchars($transportadora['nome'])?></td>
+                                <td><?=htmlspecialchars($transportadora['cnpj'])?></td>
                                 <td class="actions-column">
                                     <div class="action-buttons">
-                                        <a href="/transportadoras/editar/<?= htmlspecialchars($transportadora['codigo']) ?>" class="btn-edit">Editar</a>
-                                        <a href="/transportadoras/excluir/<?= htmlspecialchars($transportadora['codigo']) ?>" class="btn-delete">Excluir</a>
+                                        <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['codigo'])?>" class="btn-edit">Editar</a>
+                                        <a href="/transportadoras/excluir/<?=htmlspecialchars($transportadora['codigo'])?>" class="btn-delete">Excluir</a>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php endforeach;?>
                     <?php else: ?>
                         <tr>
                             <td colspan="4">Nenhuma transportadora encontrada.</td>
                         </tr>
-                    <?php endif; ?>
+                    <?php endif;?>
                 </tbody>
             </table>
         </div>
 
         <div class="pagination">
-            <button 
-                class="btn-pagination prev" 
-                <?= ($dadosPaginacao['currentPage'] ?? 1) > 1 ? '' : 'disabled' ?>
-                data-page="<?= ($dadosPaginacao['currentPage'] ?? 1) - 1 ?>"
+            <button
+                class="btn-pagination prev"
+                <?=($dadosPaginacao['currentPage'] ?? 1) > 1 ? '' : 'disabled'?>
+                data-page="<?=($dadosPaginacao['currentPage'] ?? 1) - 1?>"
             >
                 Anterior
             </button>
-            
+
             <span class="page-info">
-                Página <?= htmlspecialchars($dadosPaginacao['currentPage'] ?? 1) ?> de <?= htmlspecialchars($dadosPaginacao['totalPages'] ?? 1) ?>
+                Página <?=htmlspecialchars($dadosPaginacao['currentPage'] ?? 1)?> de <?=htmlspecialchars($dadosPaginacao['totalPages'] ?? 1)?>
             </span>
-            
-            <button 
-                class="btn-pagination next" 
-                <?= ($dadosPaginacao['currentPage'] ?? 1) < ($dadosPaginacao['totalPages'] ?? 1) ? '' : 'disabled' ?>
-                data-page="<?= ($dadosPaginacao['currentPage'] ?? 1) + 1 ?>"
+
+            <button
+                class="btn-pagination next"
+                <?=($dadosPaginacao['currentPage'] ?? 1) < ($dadosPaginacao['totalPages'] ?? 1) ? '' : 'disabled'?>
+                data-page="<?=($dadosPaginacao['currentPage'] ?? 1) + 1?>"
             >
                 Próximo
             </button>
         </div>
 
         <div class="results-info">
-            Total de registros: <?= htmlspecialchars($dadosPaginacao['totalItems'] ?? 0) ?>
+            Total de registros: <?=htmlspecialchars($dadosPaginacao['totalItems'] ?? 0)?>
         </div>
     </div>
 </body>

@@ -1,7 +1,8 @@
 <?php
-require_once(__DIR__ . '/../config/db.php');
+require_once __DIR__ . '/../config/db.php';
 
-class Usuario {
+class Usuario
+{
 
     /**
      * Autentica um usuário com base no email e senha.
@@ -10,34 +11,35 @@ class Usuario {
      * @param string $senha
      * @return array|false Retorna os dados do usuário autenticado ou false em caso de falha.
      */
-    public static function autenticar($email, $senha) {
+    public static function autenticar($email, $senha)
+    {
         try {
             $pdo = getDBConnection();
             $query = "SELECT * FROM usuarios WHERE email = :email LIMIT 1";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-    
+
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
             // Adicionar logs para depuração
             if (!$usuario) {
                 error_log("Usuário não encontrado para o email: $email");
                 return false;
             }
-    
+
             if (password_verify($senha, $hash)) {
                 echo "Senha válida!";
             } else {
                 echo "Senha inválida!";
             }
-    
+
             unset($usuario['senha']);
             return $usuario;
         } catch (PDOException $e) {
             error_log("Erro ao autenticar usuário: " . $e->getMessage());
         }
-    
+
         return false;
     }
 
@@ -49,7 +51,8 @@ class Usuario {
      * @param string $senha
      * @return bool Retorna true se o usuário for criado com sucesso, false caso contrário.
      */
-    public static function criar($nome, $email, $senha) {
+    public static function criar($nome, $email, $senha)
+    {
         try {
             $pdo = getDBConnection(); // Obter conexão com o banco de dados
 
@@ -75,7 +78,8 @@ class Usuario {
      * @param int $id
      * @return array|false Retorna os dados do usuário ou false se não encontrado.
      */
-    public static function buscarPorId($id) {
+    public static function buscarPorId($id)
+    {
         try {
             $pdo = getDBConnection();
 

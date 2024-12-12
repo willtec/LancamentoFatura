@@ -25,9 +25,9 @@
             </div>
 
             <?php
-            // Verificar se o parâmetro "cadastrar" está na URL
-            // Não será mais necessário, pois a navegação já está controlada pela rota
-            ?>
+// Verificar se o parâmetro "cadastrar" está na URL
+// Não será mais necessário, pois a navegação já está controlada pela rota
+?>
 
             <!-- Filters -->
             <div class="px-6 py-4 bg-gray-50 border-b">
@@ -67,40 +67,40 @@
                         <?php if (!empty($faturas)): ?>
                             <?php foreach ($faturas as $fatura): ?>
                                 <tr class="hover:bg-gray-50 transition duration-150">
-                                    <td class="table-body-cell"><?= $fatura['id']; ?></td>
-                                    <td class="table-body-cell"><?= $fatura['transportadora']; ?></td>
-                                    <td class="table-body-cell"><?= $fatura['numero_fatura']; ?></td>
-                                    <td class="table-body-cell text-red-600"><?= $fatura['vencimento']; ?></td>
+                                    <td class="table-body-cell"><?=$fatura['id'];?></td>
+                                    <td class="table-body-cell"><?=$fatura['transportadora'];?></td>
+                                    <td class="table-body-cell"><?=$fatura['numero_fatura'];?></td>
+                                    <td class="table-body-cell text-red-600"><?=$fatura['vencimento'];?></td>
                                     <td class="table-body-cell text-green-600 font-semibold">
-                                        R$ <?= number_format($fatura['valor'], 2, ',', '.'); ?>
+                                        R$ <?=number_format($fatura['valor'], 2, ',', '.');?>
                                     </td>
                                     <td class="table-body-cell text-blue-600 font-semibold">
-                                        R$ <?= number_format($fatura['valor_total_notas'], 2, ',', '.'); ?>
+                                        R$ <?=number_format($fatura['valor_total_notas'], 2, ',', '.');?>
                                     </td>
                                     <td class="table-body-cell">
-                                        <?php 
-                                            $percentual = ($fatura['valor_total_notas'] > 0) ? ($fatura['valor'] / $fatura['valor_total_notas']) * 100 : 0;
-                                            echo number_format($percentual, 2); 
-                                        ?>%
+                                        <?php
+$percentual = ($fatura['valor_total_notas'] > 0) ? ($fatura['valor'] / $fatura['valor_total_notas']) * 100 : 0;
+echo number_format($percentual, 2);
+?>%
                                     </td>
                                     <td class="table-body-cell">
                                         <div class="flex space-x-3">
-                                            <a href="/faturas/editar?id=<?= $fatura['id']; ?>" class="action-icon text-indigo-600 hover:text-indigo-900" title="Editar">
+                                            <a href="/faturas/editar?id=<?=$fatura['id'];?>" class="action-icon text-indigo-600 hover:text-indigo-900" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="/faturas/relatorio?id=<?= $fatura['id']; ?>" class="action-icon text-green-600 hover:text-green-900" title="Relatório">
+                                            <a href="/faturas/relatorio?id=<?=$fatura['id'];?>" class="action-icon text-green-600 hover:text-green-900" title="Relatório">
                                                 <i class="fas fa-file-invoice"></i>
                                             </a>
-                                            <a href="<?= $fatura['boleto']; ?>" target="_blank" class="action-icon text-blue-600 hover:text-blue-900" title="Boleto">
+                                            <a href="<?=$fatura['boleto'];?>" target="_blank" class="action-icon text-blue-600 hover:text-blue-900" title="Boleto">
                                                 <i class="fas fa-file-pdf"></i>
                                             </a>
-                                            <a href="<?= $fatura['arquivos_cte']; ?>" target="_blank" class="action-icon text-gray-600 hover:text-gray-900" title="XML">
+                                            <a href="<?=$fatura['arquivos_cte'];?>" target="_blank" class="action-icon text-gray-600 hover:text-gray-900" title="XML">
                                                 <i class="fas fa-file-code"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php endforeach;?>
                         <?php else: ?>
                             <tr>
                                 <td colspan="8" class="px-6 py-4 text-center text-gray-500">
@@ -113,7 +113,7 @@
                                     </div>
                                 </td>
                             </tr>
-                        <?php endif; ?>
+                        <?php endif;?>
                     </tbody>
                 </table>
             </div>

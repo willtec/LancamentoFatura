@@ -17,5 +17,3 @@ define('BASE_PATH', __DIR__);
 
 // Carrega o arquivo de rotas
 require_once BASE_PATH . '/routes/web.php';
-
-?>

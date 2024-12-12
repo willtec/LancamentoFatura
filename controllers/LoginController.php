@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__ . '/../models/Usuario.php');
-require_once(__DIR__ . '/../config/helpers.php');
+require_once __DIR__ . '/../models/Usuario.php';
+require_once __DIR__ . '/../config/helpers.php';
 
 // Iniciar a sessão apenas se não estiver ativa
 if (session_status() === PHP_SESSION_NONE) {

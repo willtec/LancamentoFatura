@@ -103,4 +103,3 @@ function sanitizar($dado)
 {
     return htmlspecialchars($dado, ENT_QUOTES, 'UTF-8');
 }
-?>

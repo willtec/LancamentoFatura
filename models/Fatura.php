@@ -1,17 +1,19 @@
 <?php
-require_once(__DIR__ . '/../config/db.php');
+require_once __DIR__ . '/../config/db.php';
 
-class Fatura {
+class Fatura
+{
     /**
      * Lista todas as faturas.
      *
      * @return array|false Retorna um array com todas as faturas ou false em caso de erro.
      */
-    public static function listarTodas() {
+    public static function listarTodas()
+    {
         try {
             $pdo = getDBConnection(); // Obter conexão com o banco de dados
             $query = "
-                SELECT f.*, t.nome AS transportadora 
+                SELECT f.*, t.nome AS transportadora
                 FROM faturas f
                 LEFT JOIN transportadora t ON f.transportadora_id = t.id
             ";
@@ -31,7 +33,8 @@ class Fatura {
      * @param array $arquivos_cte Arquivo(s) do CTe.
      * @return bool Retorna true se a fatura foi criada com sucesso, false em caso de erro.
      */
-    public static function cadastrar($dados) {
+    public static function cadastrar($dados)
+    {
         try {
             $pdo = getDBConnection(); // Obter conexão com o banco de dados
             $pdo->beginTransaction();
@@ -71,4 +74,3 @@ class Fatura {
         }
     }
 }
-?>

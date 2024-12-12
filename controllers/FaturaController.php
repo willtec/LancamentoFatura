@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . '/../models/Fatura.php');
-require_once(__DIR__ . '/../config/auth.php');
-require_once(__DIR__ . '/../config/helpers.php');
+require_once __DIR__ . '/../models/Fatura.php';
+require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../config/helpers.php';
 
 // Verificar se o usuário está autenticado
 if (!isset($_SESSION['usuario'])) {
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $numero_fatura = filter_input(INPUT_POST, 'numero_fatura', FILTER_SANITIZE_STRING);
     $vencimento = filter_input(INPUT_POST, 'vencimento', FILTER_SANITIZE_STRING);
     $valor = filter_input(INPUT_POST, 'valor', FILTER_VALIDATE_FLOAT);
-    
+
     if (!$transportadora_id || !$numero_fatura || !$vencimento || !$valor) {
         setMensagem('erro', 'Dados inválidos. Preencha o formulário corretamente.');
         include __DIR__ . '/../views/faturas/cadastrar.php';
@@ -72,4 +72,3 @@ function salvarArquivo($arquivo, $destino)
 
     return null; // Retorna null se o upload falhar
 }
-?>
