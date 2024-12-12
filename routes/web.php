@@ -6,23 +6,32 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Definir as rotas disponíveis no sistema
+// Capturar a URI atual
 $request = $_SERVER['REQUEST_URI'];
 $request = strtok($request, '?'); // Ignorar parâmetros GET na URL
 
+// Verificar se o prefixo "/LancamentoFatura" está presente
+$basePath = '/LancamentoFatura';
+if (strpos($request, $basePath) === 0) {
+    $request = substr($request, strlen($basePath));
+}
+
+// Adicionar uma barra inicial para rotas padrão
+$request = '/' . ltrim($request, '/');
+
+// Definir as rotas disponíveis no sistema
 switch ($request) {
     case '/':
-    case '/LancamentoFatura/':
-    case '/LancamentoFatura/dashboard':
+    case '/dashboard':
         // Verificar autenticação
         if (!isset($_SESSION['usuario'])) {
-            header('Location: /LancamentoFatura/login');
+            header('Location: /login');
             exit();
         }
         include __DIR__ . '/../views/dashboard.php';
         break;
 
-    case '/LancamentoFatura/login':
+    case '/login':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             include __DIR__ . '/../controllers/LoginController.php';
         } else {
@@ -30,24 +39,23 @@ switch ($request) {
         }
         break;
 
-    case '/LancamentoFatura/logout':
+    case '/logout':
         include __DIR__ . '/../controllers/LogoutController.php';
         break;
 
-    case '/LancamentoFatura/faturas':
+    case '/faturas':
         include __DIR__ . '/../controllers/FaturaController.php';
         break;
 
-    // Alteração: Corrigindo a URL para o arquivo de cadastro
-    case '/LancamentoFatura/faturas/cadastrar':
+    case '/faturas/cadastrar':
         include __DIR__ . '/../views/faturas/cadastrar.php';
         break;
 
-    case '/LancamentoFatura/transportadoras':
+    case '/transportadoras':
         include __DIR__ . '/../controllers/TransportadoraController.php';
         break;
 
-    case '/LancamentoFatura/transportadoras/cadastrar':
+    case '/transportadoras/cadastrar':
         include __DIR__ . '/../views/transportadoras/cadastrar.php';
         break;
 

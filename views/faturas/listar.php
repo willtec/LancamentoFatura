@@ -38,8 +38,6 @@
                     <div class="flex-1">
                         <select class="w-full px-3 py-2 border rounded-md">
                             <option>Filtrar por mês</option>
-                            <option>Janeiro</option>
-                            <option>Fevereiro</option>
                         </select>
                     </div>
                     <button class="btn-primary">
@@ -119,19 +117,31 @@ echo number_format($percentual, 2);
             </div>
 
             <!-- Pagination -->
-            <div class="bg-white px-6 py-4 border-t flex justify-between items-center">
-                <div class="text-sm text-gray-600">
-                    Mostrando 1-10 de 50 faturas
-                </div>
-                <div class="flex space-x-2">
-                    <button class="px-3 py-1 border rounded-md hover:bg-gray-100">
-                        Anterior
-                    </button>
-                    <button class="px-3 py-1 border rounded-md hover:bg-gray-100">
-                        Próximo
-                    </button>
-                </div>
-            </div>
+            <div class="pagination">
+            <button
+                class="btn-pagination prev"
+                <?=($dadosPaginacao['currentPage'] ?? 1) > 1 ? '' : 'disabled'?>
+                data-page="<?=($dadosPaginacao['currentPage'] ?? 1) - 1?>"
+            >
+                Anterior
+            </button>
+
+            <span class="page-info">
+                Página <?=htmlspecialchars($dadosPaginacao['currentPage'] ?? 1)?> de <?=htmlspecialchars($dadosPaginacao['totalPages'] ?? 1)?>
+            </span>
+
+            <button
+                class="btn-pagination next"
+                <?=($dadosPaginacao['currentPage'] ?? 1) < ($dadosPaginacao['totalPages'] ?? 1) ? '' : 'disabled'?>
+                data-page="<?=($dadosPaginacao['currentPage'] ?? 1) + 1?>"
+            >
+                Próximo
+            </button>
+        </div>
+
+        <div class="results-info">
+            Total de registros: <?=htmlspecialchars($dadosPaginacao['totalItems'] ?? 0)?>
+        </div>
         </div>
     </div>
 </body>

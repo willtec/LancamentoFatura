@@ -13,7 +13,7 @@
         <header class="page-header">
             <div class="header-content">
                 <h1>Transportadoras</h1>
-                <a href="/transportadoras/cadastrar" class="btn-primary">
+                <a href="transportadoras/cadastrar" class="btn-primary">
                     + Nova Transportadora
                 </a>
             </div>

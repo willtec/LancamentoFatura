@@ -1,4 +1,5 @@
 <?php
+error_log("REQUEST_URI: " . $_SERVER['REQUEST_URI']);
 
 // Arquivo principal do sistema (index.php)
 

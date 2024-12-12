@@ -19,6 +19,38 @@
   .action-icon {
     @apply text-lg hover:scale-110 transition-transform;
   }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+.btn-pagination {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-pagination:hover:not([disabled]) {
+    background-color: var(--color-hover);
+}
+
+.btn-pagination[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.results-info {
+    text-align: center;
+    color: var(--color-secondary);
+    margin-top: 10px;
+}
 }
 
 /* Responsive table adjustments */
