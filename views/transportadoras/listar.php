@@ -50,17 +50,17 @@
                                 <td><?=htmlspecialchars($transportadora['cnpj'])?></td>
                                 <td class="actions-column">
                                     <div class="action-buttons">
-                                        <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['codigo'])?>" class="btn-edit">Editar</a>
-                                        <a href="/transportadoras/excluir/<?=htmlspecialchars($transportadora['codigo'])?>" class="btn-delete">Excluir</a>
+                                        <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['id'])?>" class="btn-edit">Editar</a>
+                                        <a href="/transportadoras/excluir/<?=htmlspecialchars($transportadora['id'])?>" class="btn-delete">Excluir</a>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
                             <td colspan="4">Nenhuma transportadora encontrada.</td>
                         </tr>
-                    <?php endif;?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

@@ -49,9 +49,9 @@ class Transportadora
             $stmt = $pdo->prepare($query);
 
             $stmt->execute([
-                'nome' => $dados['nome'],
-                'codigo' => $dados['codigo'],
-                'cnpj' => $dados['cnpj'],
+                'nome' => htmlspecialchars($dados['nome']),
+                'codigo' => htmlspecialchars($dados['codigo']),
+                'cnpj' => htmlspecialchars($dados['cnpj']),
                 'modificado_por' => $usuarioId,
                 'id' => $id,
             ]);
@@ -59,6 +59,28 @@ class Transportadora
             return true;
         } catch (PDOException $e) {
             error_log("Erro ao atualizar transportadora: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Busca uma transportadora pelo ID.
+     *
+     * @param int $id
+     * @return array|false Retorna os dados da transportadora ou false se não for encontrada.
+     */
+    public static function buscarPorId($id)
+    {
+        try {
+            $pdo = getDBConnection();
+
+            $stmt = $pdo->prepare("SELECT * FROM transportadora WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar transportadora por ID: " . $e->getMessage());
         }
 
         return false;
@@ -94,7 +116,7 @@ class Transportadora
         return false;
     }
 
-    // Outros métodos já existentes permanecem sem alterações...
+    // Importar CSV
     public static function importarCSV($arquivo)
     {
         $pdo = getDBConnection();
@@ -126,6 +148,7 @@ class Transportadora
         }
     }
 
+    // Contar transportadoras com ou sem termo de busca
     public static function contarTransportadoras($termo = '')
     {
         $pdo = getDBConnection();
@@ -145,6 +168,7 @@ class Transportadora
         return $resultado['total'] ?? 0;
     }
 
+    // Listar transportadoras com paginação e busca
     public static function listarPaginado($limite, $offset, $termo = '')
     {
         $pdo = getDBConnection();
@@ -165,6 +189,7 @@ class Transportadora
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Buscar transportadoras para autocomplete
     public static function buscarPorTermo($termo)
     {
         $pdo = getDBConnection();
@@ -184,6 +209,7 @@ class Transportadora
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['termo'])) {
     $termo = $_GET['termo'];
     $resultado = Transportadora::buscarPorTermo($termo);
+    header('Content-Type: application/json');
     echo json_encode($resultado);
     exit;
 }

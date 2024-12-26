@@ -19,19 +19,24 @@ if (strpos($request, $basePath) === 0) {
 // Adicionar uma barra inicial para rotas padrão
 $request = '/' . ltrim($request, '/');
 
+// Função para verificar autenticação
+function verificarAutenticacao() {
+    if (!isset($_SESSION['usuario'])) {
+        header('Location: /login');
+        exit();
+    }
+}
+
 // Definir as rotas disponíveis no sistema
-switch ($request) {
-    case '/':
-    case '/dashboard':
-        // Verificar autenticação
-        if (!isset($_SESSION['usuario'])) {
-            header('Location: /login');
-            exit();
-        }
+switch (true) {
+    // Rota inicial ou dashboard
+    case $request === '/' || $request === '/dashboard':
+        verificarAutenticacao();
         include __DIR__ . '/../views/dashboard.php';
         break;
 
-    case '/login':
+    // Rota para login
+    case $request === '/login':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             include __DIR__ . '/../controllers/LoginController.php';
         } else {
@@ -39,28 +44,45 @@ switch ($request) {
         }
         break;
 
-    case '/logout':
+    // Rota para logout
+    case $request === '/logout':
+        verificarAutenticacao();
         include __DIR__ . '/../controllers/LogoutController.php';
         break;
 
-    case '/faturas':
+    // Rota para listar faturas
+    case $request === '/faturas':
+        verificarAutenticacao();
         include __DIR__ . '/../controllers/FaturaController.php';
         break;
 
-    case '/faturas/cadastrar':
+    // Rota para cadastrar faturas
+    case $request === '/faturas/cadastrar':
+        verificarAutenticacao();
         include __DIR__ . '/../views/faturas/cadastrar.php';
         break;
 
-    case '/transportadoras':
+    // Rota para listar transportadoras
+    case $request === '/transportadoras':
+        verificarAutenticacao();
         include __DIR__ . '/../controllers/TransportadoraController.php';
         break;
 
-    case '/transportadoras/cadastrar':
+    // Rota para cadastrar transportadoras
+    case $request === '/transportadoras/cadastrar':
+        verificarAutenticacao();
         include __DIR__ . '/../views/transportadoras/cadastrar.php';
         break;
 
+    // Rota para editar transportadoras
+    case preg_match('#^/transportadoras/editar/(\d+)$#', $request, $matches):
+        verificarAutenticacao();
+        $_GET['id'] = $matches[1]; // Capturar o ID da URL
+        include __DIR__ . '/../controllers/TransportadoraController.php';
+        break;
+
+    // Rota não encontrada
     default:
-        // Página não encontrada
         http_response_code(404);
         echo "404 - Página $request não encontrada";
         break;
