@@ -8,8 +8,30 @@ if (!isset($_SESSION['usuario'])) {
     redirecionar('/login');
 }
 
-// Verificar se é uma requisição POST (para cadastrar fatura)
+// Verificar o método HTTP da requisição
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Lidar com a criação de uma nova fatura
+    processarFormularioFatura();
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao'])) {
+    // Ações específicas baseadas no parâmetro 'acao'
+    $acao = $_GET['acao'];
+    if ($acao === 'deletar' && isset($_GET['id'])) {
+        deletarFatura($_GET['id']);
+    } elseif ($acao === 'editar' && isset($_GET['id'])) {
+        editarFatura($_GET['id']);
+    } else {
+        listarFaturas();
+    }
+} else {
+    // Exibir a lista de faturas
+    listarFaturas();
+}
+
+/**
+ * Processa o formulário para criar ou atualizar uma fatura.
+ */
+function processarFormularioFatura()
+{
     // Validação de dados enviados pelo formulário
     $transportadora_id = filter_input(INPUT_POST, 'transportadora_id', FILTER_VALIDATE_INT);
     $numero_fatura = filter_input(INPUT_POST, 'numero_fatura', FILTER_SANITIZE_STRING);
@@ -34,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $arquivos_cte = salvarArquivo($_FILES['arquivos_cte'], '../uploads/ctes/');
     }
 
-    // Dados a serem enviados ao modelo
+    // Dados para o modelo
     $dadosFatura = [
         'transportadora_id' => $transportadora_id,
         'numero_fatura' => $numero_fatura,
@@ -44,22 +66,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'arquivos_cte' => $arquivos_cte,
     ];
 
-    // Tentar cadastrar a fatura
-    if (Fatura::cadastrar($dadosFatura)) {
-        setMensagem('sucesso', 'Fatura cadastrada com sucesso.');
-        redirecionar('/faturas');
+    // Inserir ou atualizar a fatura
+    if (isset($_POST['id']) && !empty($_POST['id'])) {
+        $id = intval($_POST['id']);
+        if (Fatura::atualizar($id, $dadosFatura)) {
+            setMensagem('sucesso', 'Fatura atualizada com sucesso.');
+        } else {
+            setMensagem('erro', 'Erro ao atualizar a fatura.');
+        }
     } else {
-        setMensagem('erro', 'Erro ao cadastrar a fatura.');
-        include __DIR__ . '/../views/faturas/cadastrar.php';
+        if (Fatura::cadastrar($dadosFatura)) {
+            setMensagem('sucesso', 'Fatura cadastrada com sucesso.');
+        } else {
+            setMensagem('erro', 'Erro ao cadastrar a fatura.');
+        }
     }
-    exit();
+
+    redirecionar('/faturas');
 }
 
-// Caso contrário, se for GET, lista as faturas
-$faturas = Fatura::listarTodas();
-include __DIR__ . '/../views/faturas/listar.php';
+/**
+ * Exibe a lista de faturas.
+ */
+function listarFaturas()
+{
+    $faturas = Fatura::listarTodas();
+    include __DIR__ . '/../views/faturas/listar.php';
+}
 
-// Função auxiliar para salvar arquivos
+/**
+ * Processa a exclusão de uma fatura.
+ *
+ * @param int $id ID da fatura a ser excluída.
+ */
+function deletarFatura($id)
+{
+    if (Fatura::deletar($id)) {
+        setMensagem('sucesso', 'Fatura excluída com sucesso.');
+    } else {
+        setMensagem('erro', 'Erro ao excluir a fatura.');
+    }
+    redirecionar('/faturas');
+}
+
+/**
+ * Exibe o formulário de edição para uma fatura existente.
+ *
+ * @param int $id ID da fatura a ser editada.
+ */
+function editarFatura($id)
+{
+    $fatura = Fatura::buscarPorId($id);
+    if ($fatura) {
+        include __DIR__ . '/../views/faturas/cadastrar.php';
+    } else {
+        setMensagem('erro', 'Fatura não encontrada.');
+        redirecionar('/faturas');
+    }
+}
+
+/**
+ * Salva um arquivo no destino especificado.
+ *
+ * @param array $arquivo Array contendo as informações do arquivo enviado.
+ * @param string $destino Caminho do diretório de destino.
+ * @return string|null Retorna o nome do arquivo salvo ou null em caso de falha.
+ */
 function salvarArquivo($arquivo, $destino)
 {
     $nomeArquivo = basename($arquivo['name']);

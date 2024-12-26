@@ -2,10 +2,13 @@
 // Inclua as configurações globais
 require_once __DIR__ . '/constants.php';
 
-// Verificar se o usuário está autenticado
-if (!isset($_SESSION['usuario']) && !in_array(basename($_SERVER['PHP_SELF']), ['login.php', 'logout.php'])) {
-    header('Location: ' . BASE_URL . '/login');
-    exit();
+// Função de autenticação
+function autenticarUsuario()
+{
+    if (!isset($_SESSION['usuario'])) {
+        header('Location: ' . BASE_URL . '/login');
+        exit();
+    }
 }
 
 // Verificar permissões de acesso
@@ -16,3 +19,6 @@ function verificarPermissao($nivelRequerido)
         die('Acesso negado.');
     }
 }
+
+// Autenticar o usuário para todas as páginas menos login e logout
+autenticarUsuario();

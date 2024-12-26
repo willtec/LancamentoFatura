@@ -28,7 +28,73 @@ class Transportadora
         ]);
     }
 
-    // Método para importar transportadoras via arquivo CSV
+    /**
+     * Atualiza os dados de uma transportadora existente.
+     *
+     * @param int $id
+     * @param array $dados
+     * @param int $usuarioId ID do usuário que está realizando a alteração.
+     * @return bool Retorna true se a transportadora foi atualizada com sucesso, false caso contrário.
+     */
+    public static function atualizar($id, $dados, $usuarioId)
+    {
+        try {
+            $pdo = getDBConnection();
+
+            $query = "
+                UPDATE transportadora 
+                SET nome = :nome, codigo = :codigo, cnpj = :cnpj, modificado_por = :modificado_por 
+                WHERE id = :id
+            ";
+            $stmt = $pdo->prepare($query);
+
+            $stmt->execute([
+                'nome' => $dados['nome'],
+                'codigo' => $dados['codigo'],
+                'cnpj' => $dados['cnpj'],
+                'modificado_por' => $usuarioId,
+                'id' => $id,
+            ]);
+
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erro ao atualizar transportadora: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Busca a última atualização no sistema com o responsável.
+     *
+     * @return array|false Retorna um array com data, nome da tabela e o nome do usuário ou false em caso de erro.
+     */
+    public static function obterUltimaAtualizacaoComUsuario()
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "
+                SELECT 
+                    MAX(f.data_lancamento) AS data, 
+                    'faturas' AS tabela, 
+                    COALESCE(
+                        (SELECT nome FROM usuarios WHERE id = f.modificado_por), 
+                        'Alterado diretamente no banco'
+                    ) AS usuario
+                FROM faturas f
+            ";
+            $stmt = $pdo->query($query);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $resultado ?: false;
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar última atualização com responsável: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    // Outros métodos já existentes permanecem sem alterações...
     public static function importarCSV($arquivo)
     {
         $pdo = getDBConnection();
@@ -60,7 +126,6 @@ class Transportadora
         }
     }
 
-    // Método para contar transportadoras com ou sem filtro
     public static function contarTransportadoras($termo = '')
     {
         $pdo = getDBConnection();
@@ -77,10 +142,9 @@ class Transportadora
         $stmt->execute();
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $resultado['total'];
+        return $resultado['total'] ?? 0;
     }
 
-    // Método para listar transportadoras com paginação
     public static function listarPaginado($limite, $offset, $termo = '')
     {
         $pdo = getDBConnection();
@@ -101,9 +165,25 @@ class Transportadora
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Método para cadastrar uma transportadora (compatível com o controller)
-    public static function cadastrar($dados)
+    public static function buscarPorTermo($termo)
     {
-        return self::criar($dados);
+        $pdo = getDBConnection();
+
+        $sql = "SELECT id, codigo, nome FROM transportadora
+                WHERE codigo LIKE :termo OR nome LIKE :termo
+                LIMIT 10";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':termo', "%$termo%", PDO::PARAM_STR);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+}
+
+// Endpoint para buscar transportadoras (autocomplete)
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['termo'])) {
+    $termo = $_GET['termo'];
+    $resultado = Transportadora::buscarPorTermo($termo);
+    echo json_encode($resultado);
+    exit;
 }

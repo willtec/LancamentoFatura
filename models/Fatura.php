@@ -3,15 +3,11 @@ require_once __DIR__ . '/../config/db.php';
 
 class Fatura
 {
-    /**
-     * Lista todas as faturas.
-     *
-     * @return array|false Retorna um array com todas as faturas ou false em caso de erro.
-     */
+    // Método para listar todas as faturas
     public static function listarTodas()
     {
         try {
-            $pdo = getDBConnection(); // Obter conexão com o banco de dados
+            $pdo = getDBConnection();
             $query = "
                 SELECT f.*, t.nome AS transportadora
                 FROM faturas f
@@ -25,37 +21,20 @@ class Fatura
         }
     }
 
-    /**
-     * Cria uma nova fatura.
-     *
-     * @param array $dados Dados da fatura.
-     * @param array $boleto Arquivo do boleto.
-     * @param array $arquivos_cte Arquivo(s) do CTe.
-     * @return bool Retorna true se a fatura foi criada com sucesso, false em caso de erro.
-     */
+    // Método para criar uma nova fatura
     public static function cadastrar($dados)
     {
         try {
-            $pdo = getDBConnection(); // Obter conexão com o banco de dados
+            $pdo = getDBConnection();
             $pdo->beginTransaction();
 
-            // Processar upload dos arquivos
-            $numero_fatura = $dados['numero_fatura'];
-            $boleto_path = UPLOAD_PDFS . $numero_fatura . '.pdf';
-            $cte_path = UPLOAD_XMLS . $numero_fatura . '.zip';
+            $boleto_path = $dados['boleto'] ?? null;
+            $cte_path = $dados['arquivos_cte'] ?? null;
 
-            if (!move_uploaded_file($dados['boleto']['tmp_name'], $boleto_path)) {
-                throw new Exception("Erro ao mover o arquivo do boleto.");
-            }
-            if (!move_uploaded_file($dados['arquivos_cte']['tmp_name'], $cte_path)) {
-                throw new Exception("Erro ao mover os arquivos de CTe.");
-            }
-
-            // Inserir a fatura no banco de dados
-            $stmt = $pdo->prepare("
-                INSERT INTO faturas (transportadora_id, numero_fatura, vencimento, valor, boleto, arquivos_cte)
-                VALUES (:transportadora_id, :numero_fatura, :vencimento, :valor, :boleto, :arquivos_cte)
-            ");
+            $stmt = $pdo->prepare(
+                "INSERT INTO faturas (transportadora_id, numero_fatura, vencimento, valor, boleto, arquivos_cte)
+                VALUES (:transportadora_id, :numero_fatura, :vencimento, :valor, :boleto, :arquivos_cte)"
+            );
             $stmt->execute([
                 'transportadora_id' => $dados['transportadora_id'],
                 'numero_fatura' => $dados['numero_fatura'],
@@ -72,5 +51,103 @@ class Fatura
             $pdo->rollBack();
             return false;
         }
+    }
+
+    // Método para buscar uma fatura pelo ID
+    public static function buscarPorId($id)
+    {
+        try {
+            $pdo = getDBConnection();
+            $stmt = $pdo->prepare(
+                "SELECT f.*, t.nome AS transportadora
+                FROM faturas f
+                LEFT JOIN transportadora t ON f.transportadora_id = t.id
+                WHERE f.id = :id"
+            );
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar fatura: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Método para atualizar os dados de uma fatura existente
+    public static function atualizar($id, $dados, $usuarioId)
+    {
+        try {
+            $pdo = getDBConnection();
+
+            $query = "
+                UPDATE faturas
+                SET 
+                    transportadora_id = :transportadora_id,
+                    numero_fatura = :numero_fatura,
+                    vencimento = :vencimento,
+                    valor = :valor,
+                    boleto = :boleto,
+                    arquivos_cte = :arquivos_cte,
+                    modificado_por = :modificado_por
+                WHERE id = :id
+            ";
+            $stmt = $pdo->prepare($query);
+
+            $stmt->execute([
+                'transportadora_id' => $dados['transportadora_id'],
+                'numero_fatura' => $dados['numero_fatura'],
+                'vencimento' => $dados['vencimento'],
+                'valor' => $dados['valor'],
+                'boleto' => $dados['boleto'] ?? null,
+                'arquivos_cte' => $dados['arquivos_cte'] ?? null,
+                'modificado_por' => $usuarioId,
+                'id' => $id,
+            ]);
+
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erro ao atualizar fatura: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    // Método para remover uma fatura do banco de dados
+    public static function deletar($id)
+    {
+        try {
+            $pdo = getDBConnection();
+            $stmt = $pdo->prepare("DELETE FROM faturas WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erro ao deletar fatura: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Método para obter a última atualização das faturas com dados do usuário
+    public static function obterUltimaAtualizacaoComUsuario()
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "
+                SELECT 
+                    MAX(f.data_lancamento) AS data, 
+                    'faturas' AS tabela, 
+                    COALESCE(
+                        (SELECT nome FROM usuarios WHERE id = f.modificado_por), 
+                        'Alterado diretamente no banco'
+                    ) AS usuario
+                FROM faturas f
+            ";
+            $stmt = $pdo->query($query);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $resultado ?: false;
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar última atualização de faturas com responsável: " . $e->getMessage());
+        }
+
+        return false;
     }
 }

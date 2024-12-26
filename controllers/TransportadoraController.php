@@ -40,6 +40,9 @@ $totalPaginas = ceil($totalTransportadoras / $itensPorPagina);
 // Listar transportadoras com filtro e paginação
 $transportadoras = Transportadora::listarPaginado($itensPorPagina, $offset, $termoBusca);
 
+// Obter o total de transportadoras
+$total_transportadoras = Transportadora::contarTransportadoras();
+
 // Preparar dados para a view
 $dadosPaginacao = [
     'transportadoras' => $transportadoras,
