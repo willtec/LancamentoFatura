@@ -99,23 +99,23 @@
                                         <td><?=htmlspecialchars($transportadora['cnpj'])?></td>
                                         <td class="actions-column">
                                             <div class="action-buttons">
-                                                <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['id'])?>" 
-                                                   class="btn-action btn-edit" 
+                                                <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['id'])?>"
+                                                   class="btn-action btn-edit"
                                                    title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                     <span>Editar</span>
                                                 </a>
-                                                <a href="/transportadoras/excluir/<?=htmlspecialchars($transportadora['id'])?>" 
-                                                   class="btn-action btn-delete" 
-                                                   title="Excluir"
-                                                   onclick="return confirm('Tem certeza que deseja excluir esta transportadora?');">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                    <span>Excluir</span>
+                                                <a href="/transportadoras/excluir/<?= htmlspecialchars($transportadora['id']) ?>" 
+                                                    class="btn-action btn-delete" 
+                                                    title="Excluir"
+                                                    onclick="return confirm('Tem certeza que deseja excluir esta transportadora?');">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                        <span>Excluir</span>
                                                 </a>
                                             </div>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php endforeach;?>
                             <?php else: ?>
                                 <tr class="no-results">
                                     <td colspan="4">
@@ -125,7 +125,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php endif;?>
                         </tbody>
                     </table>
                 </div>
@@ -136,22 +136,20 @@
                         <button
                             class="btn-pagination prev"
                             <?=($dadosPaginacao['currentPage'] ?? 1) > 1 ? '' : 'disabled'?>
-                            data-page="<?=($dadosPaginacao['currentPage'] ?? 1) - 1?>"
-                        >
+                            onclick="window.location.href='?page=<?=($dadosPaginacao['currentPage'] ?? 1) - 1?>'">
                             <i class="fas fa-chevron-left"></i>
                             Anterior
                         </button>
 
                         <span class="page-info">
-                            Página <?=htmlspecialchars($dadosPaginacao['currentPage'] ?? 1)?> 
+                            Página <?=htmlspecialchars($dadosPaginacao['currentPage'] ?? 1)?>
                             de <?=htmlspecialchars($dadosPaginacao['totalPages'] ?? 1)?>
                         </span>
 
                         <button
                             class="btn-pagination next"
                             <?=($dadosPaginacao['currentPage'] ?? 1) < ($dadosPaginacao['totalPages'] ?? 1) ? '' : 'disabled'?>
-                            data-page="<?=($dadosPaginacao['currentPage'] ?? 1) + 1?>"
-                        >
+                            onclick="window.location.href='?page=<?=($dadosPaginacao['currentPage'] ?? 1) + 1?>'">
                             Próximo
                             <i class="fas fa-chevron-right"></i>
                         </button>
@@ -167,15 +165,15 @@
     </div>
 
     <!-- Alert Messages -->
-    <?php if (!empty($_SESSION['mensagem'])): ?>
-        <div class="alert alert-<?= htmlspecialchars($_SESSION['mensagem']['tipo']) ?>">
-            <i class="fas fa-<?= $_SESSION['mensagem']['tipo'] === 'success' ? 'check-circle' : 'exclamation-circle' ?>"></i>
-            <p><?= htmlspecialchars($_SESSION['mensagem']['texto']) ?></p>
+    <?php if (!empty($_SESSION['mensagem']) && isset($_SESSION['mensagem']['tipo'], $_SESSION['mensagem']['texto'])): ?>
+        <div class="alert alert-<?=htmlspecialchars($_SESSION['mensagem']['tipo'])?>">
+            <i class="fas fa-<?=$_SESSION['mensagem']['tipo'] === 'success' ? 'check-circle' : 'exclamation-circle'?>"></i>
+            <p><?=htmlspecialchars($_SESSION['mensagem']['texto'])?></p>
             <button class="alert-close" aria-label="Fechar" onclick="this.parentElement.style.display='none';">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <?php unset($_SESSION['mensagem']); ?>
-    <?php endif; ?>
+        <?php unset($_SESSION['mensagem']);?>
+    <?php endif;?>
 </body>
 </html>

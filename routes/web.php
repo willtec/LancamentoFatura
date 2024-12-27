@@ -74,10 +74,37 @@ switch (true) {
         include __DIR__ . '/../views/transportadoras/cadastrar.php';
         break;
 
-    // Rota para editar transportadoras
+    // Rota para editar transportadoras (GET com ID na URL)
     case preg_match('#^/transportadoras/editar/(\d+)$#', $request, $matches):
         verificarAutenticacao();
-        $_GET['id'] = $matches[1]; // Capturar o ID da URL
+        $_GET['id'] = filter_var($matches[1], FILTER_SANITIZE_NUMBER_INT); // Capturar e sanitizar o ID da URL
+        include __DIR__ . '/../controllers/TransportadoraController.php';
+        break;
+
+    // Processar edição (formulário enviado via POST)
+    case $request === '/transportadoras/editar':
+        verificarAutenticacao();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            include __DIR__ . '/../controllers/TransportadoraController.php';
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $_GET['id'] = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+            include __DIR__ . '/../controllers/TransportadoraController.php';
+        } else {
+            http_response_code(405); // Método não permitido
+            echo "Método não permitido";
+        }
+        break;
+
+    // Página para listar transportadoras
+    case $request === '/transportadoras/listar':
+        verificarAutenticacao();
+        include __DIR__ . '/../views/transportadoras/listar.php';
+        break;
+
+    // Rota para exclusão de transportadoras
+    case preg_match('#^/transportadoras/excluir/(\d+)$#', $request, $matches):
+        verificarAutenticacao();
+        $_GET['id'] = filter_var($matches[1], FILTER_SANITIZE_NUMBER_INT); // Capturar e sanitizar o ID
         include __DIR__ . '/../controllers/TransportadoraController.php';
         break;
 

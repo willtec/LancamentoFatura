@@ -32,15 +32,17 @@
 
             <!-- Page Content -->
             <div class="content-container">
-                <?php if (!empty($_SESSION['mensagem'])): ?>
+                <!-- Mensagens de Alerta -->
+                <?php if (!empty($_SESSION['mensagem']) && isset($_SESSION['mensagem']['tipo'], $_SESSION['mensagem']['texto'])): ?>
                     <div class="alert alert-<?= htmlspecialchars($_SESSION['mensagem']['tipo']) ?>">
                         <i class="fas fa-<?= $_SESSION['mensagem']['tipo'] === 'success' ? 'check-circle' : 'exclamation-circle' ?>"></i>
                         <p><?= htmlspecialchars($_SESSION['mensagem']['texto']) ?></p>
-                        <button class="alert-close" aria-label="Fechar">&times;</button>
+                        <button class="alert-close" aria-label="Fechar" onclick="this.parentElement.style.display='none';">&times;</button>
                     </div>
                     <?php unset($_SESSION['mensagem']); ?>
                 <?php endif; ?>
 
+                <!-- Formulário de Edição -->
                 <?php if (!empty($transportadora)): ?>
                     <div class="page-header">
                         <div class="header-content">
@@ -54,9 +56,11 @@
 
                     <div class="card">
                         <form class="edit-form" method="POST" action="/transportadoras/editar" onsubmit="return validarFormulario();">
+                            <!-- CSRF e ID -->
                             <input type="hidden" name="id" value="<?= htmlspecialchars($transportadora['id']) ?>">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 
+                            <!-- Campos do Formulário -->
                             <div class="form-grid">
                                 <div class="form-field">
                                     <label for="codigo">
@@ -115,6 +119,7 @@
                                 </div>
                             </div>
 
+                            <!-- Botões de Ação -->
                             <div class="form-actions">
                                 <button type="button" class="btn btn-secondary" onclick="window.location.href='/LancamentoFatura/transportadoras'">
                                     <i class="fas fa-arrow-left"></i>
@@ -128,12 +133,13 @@
                         </form>
                     </div>
                 <?php else: ?>
+                    <!-- Mensagem de Erro -->
                     <div class="error-card">
                         <div class="error-content">
                             <i class="fas fa-exclamation-circle"></i>
                             <h2>Transportadora não encontrada</h2>
                             <p>Não foi possível encontrar os dados da transportadora solicitada.</p>
-                            <a href="/transportadoras/listar" class="btn btn-primary">
+                            <a href="/LancamentoFatura/transportadoras" class="btn btn-primary">
                                 <i class="fas fa-arrow-left"></i>
                                 Voltar para Lista
                             </a>
