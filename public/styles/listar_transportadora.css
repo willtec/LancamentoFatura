@@ -419,6 +419,14 @@ body {
     background-color: var(--primary-hover);
 }
 
+.row-inactive {
+    opacity: 0.6; /* Registros ocultos ficam mais claros */
+    background-color: #f8d7da; /* Cor leve para diferenciar */
+}
+.row-inactive .action-buttons a {
+    pointer-events: auto; /* Permitir cliques nos botões */
+}
+
 @media screen and (max-width: 768px) {
     .header-content {
         flex-direction: column;

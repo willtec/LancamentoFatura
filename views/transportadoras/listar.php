@@ -91,41 +91,51 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($dadosPaginacao['transportadoras'])): ?>
-                                <?php foreach ($dadosPaginacao['transportadoras'] as $transportadora): ?>
-                                    <tr>
-                                        <td><?=htmlspecialchars($transportadora['codigo'])?></td>
-                                        <td><?=htmlspecialchars($transportadora['nome'])?></td>
-                                        <td><?=htmlspecialchars($transportadora['cnpj'])?></td>
-                                        <td class="actions-column">
-                                            <div class="action-buttons">
-                                                <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['id'])?>"
-                                                   class="btn-action btn-edit"
-                                                   title="Editar">
-                                                    <i class="fas fa-edit"></i>
-                                                    <span>Editar</span>
-                                                </a>
-                                                <a href="/transportadoras/excluir/<?= htmlspecialchars($transportadora['id']) ?>" 
-                                                    class="btn-action btn-delete" 
-                                                    title="Excluir"
-                                                    onclick="return confirm('Tem certeza que deseja excluir esta transportadora?');">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                        <span>Excluir</span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach;?>
-                            <?php else: ?>
-                                <tr class="no-results">
-                                    <td colspan="4">
-                                        <div class="no-results-content">
-                                            <i class="fas fa-inbox"></i>
-                                            <p>Nenhuma transportadora encontrada.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endif;?>
+                        <?php if (!empty($dadosPaginacao['transportadoras'])): ?>
+                        <?php foreach ($dadosPaginacao['transportadoras'] as $transportadora): ?>
+                            <tr class="<?= $transportadora['ativo'] ? '' : 'row-inactive' ?>">
+                                <td><?= htmlspecialchars($transportadora['codigo']) ?></td>
+                                <td><?= htmlspecialchars($transportadora['nome']) ?></td>
+                                <td><?= htmlspecialchars($transportadora['cnpj']) ?></td>
+                                <td class="actions-column">
+                                    <div class="action-buttons">
+                                        <a href="/transportadoras/editar/<?= htmlspecialchars($transportadora['id']) ?>"
+                                        class="btn-action btn-edit"
+                                        title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                            <span>Editar</span>
+                                        </a>
+                                        <?php if ($transportadora['ativo']): ?>
+                                            <a href="/transportadoras/excluir/<?= htmlspecialchars($transportadora['id']) ?>"
+                                            class="btn-action btn-delete"
+                                            title="Excluir"
+                                            onclick="return confirm('Tem certeza que deseja excluir esta transportadora?');">
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span>Excluir</span>
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="/transportadoras/ativar/<?= htmlspecialchars($transportadora['id']) ?>"
+                                            class="btn-action btn-activate"
+                                            title="Tornar visível"
+                                            onclick="return confirm('Deseja tornar esta transportadora visível novamente?');">
+                                                <i class="fas fa-eye"></i>
+                                                <span>Tornar Visível</span>
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr class="no-results">
+                            <td colspan="4">
+                                <div class="no-results-content">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Nenhuma transportadora encontrada.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

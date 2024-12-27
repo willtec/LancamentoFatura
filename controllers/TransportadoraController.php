@@ -91,6 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && strpos($_SERVE
     exit;
 }
 
+// Tornar visível uma transportadora
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && strpos($_SERVER['REQUEST_URI'], '/ativar') !== false) {
+    $id = (int) $_GET['id'];
+
+    if (Transportadora::ativar($id)) {
+        setMensagem('sucesso', 'Transportadora ativada com sucesso.');
+    } else {
+        setMensagem('erro', 'Erro ao ativar a transportadora.');
+    }
+
+    redirecionar('/LancamentoFatura/transportadoras');
+    exit;
+}
+
 // Configurações de paginação
 $itensPorPagina = 10;
 $paginaAtual = isset($_GET['page']) ? (int) $_GET['page'] : 1;

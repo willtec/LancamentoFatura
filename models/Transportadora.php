@@ -91,6 +91,19 @@ class Transportadora
         }
     }
 
+    // método ativar
+    public static function ativar($id)
+    {
+        try {
+            $pdo = getDBConnection();
+            $stmt = $pdo->prepare("UPDATE transportadora SET ativo = 1 WHERE id = :id");
+            return $stmt->execute(['id' => $id]);
+        } catch (PDOException $e) {
+            error_log("Erro ao ativar transportadora: " . $e->getMessage());
+            return false;
+        }
+    }
+
     // Buscar uma transportadora pelo ID
     public static function buscarPorId($id)
     {
@@ -188,18 +201,18 @@ class Transportadora
         }
     }
 
-    // Listar transportadoras com paginação
+    // Listar transportadoras com paginação (exibe ativos e ocultos)
     public static function listarPaginado($limite, $offset, $termo = '')
     {
         try {
             $pdo = getDBConnection();
 
             if (!empty($termo)) {
-                $sql = "SELECT * FROM transportadora WHERE ativo = 1 AND (nome LIKE :termo OR cnpj LIKE :termo) LIMIT :limite OFFSET :offset";
+                $sql = "SELECT * FROM transportadora WHERE (nome LIKE :termo OR cnpj LIKE :termo) LIMIT :limite OFFSET :offset";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':termo', "%$termo%", PDO::PARAM_STR);
             } else {
-                $sql = "SELECT * FROM transportadora WHERE ativo = 1 LIMIT :limite OFFSET :offset";
+                $sql = "SELECT * FROM transportadora LIMIT :limite OFFSET :offset";
                 $stmt = $pdo->prepare($sql);
             }
 

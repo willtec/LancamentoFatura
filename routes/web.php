@@ -108,6 +108,13 @@ switch (true) {
         include __DIR__ . '/../controllers/TransportadoraController.php';
         break;
 
+    // Rota para ativar transportadoras
+    case preg_match('#^/transportadoras/ativar/(\d+)$#', $request, $matches):
+        verificarAutenticacao();
+        $_GET['id'] = filter_var($matches[1], FILTER_SANITIZE_NUMBER_INT); // Capturar e sanitizar o ID
+        include __DIR__ . '/../controllers/TransportadoraController.php';
+        break;
+
     // Rota não encontrada
     default:
         http_response_code(404);
