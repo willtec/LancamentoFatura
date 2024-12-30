@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Referência ao campo de CNPJ
   const cnpjInput = document.getElementById("cnpj");
 
   // Função para aplicar a máscara de CNPJ
@@ -8,6 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
       /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
       "$1.$2.$3/$4-$5"
     );
+  }
+
+  // Formatar o CNPJ ao carregar a página
+  if (cnpjInput && cnpjInput.value) {
+    const value = cnpjInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    cnpjInput.value = aplicarMascaraCNPJ(value);
   }
 
   // Máscara dinâmica para o campo de CNPJ
@@ -25,6 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Validação de CNPJ no envio do formulário
   document.querySelector("form").addEventListener("submit", function (e) {
+    // Remove a máscara do CNPJ antes de enviar
+    cnpjInput.value = cnpjInput.value.replace(/\D/g, ""); // Remove pontuação
+
+    // Valida o CNPJ
     if (!validarCNPJ()) {
       e.preventDefault(); // Impede o envio do formulário se inválido
     }
