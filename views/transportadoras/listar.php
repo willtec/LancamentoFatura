@@ -91,12 +91,23 @@
                             </tr>
                         </thead>
                         <tbody>
+                        <?php
+                        // Função para formatar o CNPJ
+                        function formatarCNPJ($cnpj)
+                        {
+                            $cnpj = preg_replace('/\D/', '', $cnpj); // Remove caracteres não numéricos
+                            return preg_match('/^\d{14}$/', $cnpj)
+                                ? substr($cnpj, 0, 2) . '.' . substr($cnpj, 2, 3) . '.' . substr($cnpj, 5, 3) . '/' . substr($cnpj, 8, 4) . '-' . substr($cnpj, 12, 2)
+                                : $cnpj; // Retorna o CNPJ formatado ou o valor original se inválido
+                        }
+                        ?>
+
                         <?php if (!empty($dadosPaginacao['transportadoras'])): ?>
                         <?php foreach ($dadosPaginacao['transportadoras'] as $transportadora): ?>
                             <tr class="<?= $transportadora['ativo'] ? '' : 'row-inactive' ?>">
                                 <td><?= htmlspecialchars($transportadora['codigo']) ?></td>
                                 <td><?= htmlspecialchars($transportadora['nome']) ?></td>
-                                <td><?= htmlspecialchars($transportadora['cnpj']) ?></td>
+                                <td><?= htmlspecialchars(formatarCNPJ($transportadora['cnpj'])) ?></td>
                                 <td class="actions-column">
                                     <div class="action-buttons">
                                         <a href="/transportadoras/editar/<?= htmlspecialchars($transportadora['id']) ?>"
@@ -143,13 +154,13 @@
                 <!-- Pagination -->
                 <div class="pagination-container">
                     <div class="pagination">
-                        <button
-                            class="btn-pagination prev"
-                            <?=($dadosPaginacao['currentPage'] ?? 1) > 1 ? '' : 'disabled'?>
-                            onclick="window.location.href='?page=<?=($dadosPaginacao['currentPage'] ?? 1) - 1?>'">
-                            <i class="fas fa-chevron-left"></i>
-                            Anterior
-                        </button>
+                    <button
+                        class="btn-pagination prev"
+                        data-page="<?=($dadosPaginacao['currentPage'] ?? 1) - 1?>"
+                        <?=($dadosPaginacao['currentPage'] ?? 1) > 1 ? '' : 'disabled'?>>
+                        <i class="fas fa-chevron-left"></i>
+                        Anterior
+                    </button>
 
                         <span class="page-info">
                             Página <?=htmlspecialchars($dadosPaginacao['currentPage'] ?? 1)?>
@@ -158,8 +169,8 @@
 
                         <button
                             class="btn-pagination next"
-                            <?=($dadosPaginacao['currentPage'] ?? 1) < ($dadosPaginacao['totalPages'] ?? 1) ? '' : 'disabled'?>
-                            onclick="window.location.href='?page=<?=($dadosPaginacao['currentPage'] ?? 1) + 1?>'">
+                            data-page="<?=($dadosPaginacao['currentPage'] ?? 1) + 1?>"
+                            <?=($dadosPaginacao['currentPage'] ?? 1) < ($dadosPaginacao['totalPages'] ?? 1) ? '' : 'disabled'?>>
                             Próximo
                             <i class="fas fa-chevron-right"></i>
                         </button>

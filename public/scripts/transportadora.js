@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", (e) => {
       if (button.hasAttribute("disabled")) return;
 
-      const page = e.target.getAttribute("data-page");
+      const page = button.getAttribute("data-page");
       const searchInput = document.querySelector('input[name="search"]');
       const searchTerm = searchInput ? searchInput.value.trim() : "";
 
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         url.searchParams.set("search", searchTerm);
       }
 
+      console.log("Redirecionando para:", url.toString());
       window.location.href = url.toString();
     });
   });
