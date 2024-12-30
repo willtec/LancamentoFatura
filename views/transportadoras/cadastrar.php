@@ -1,13 +1,32 @@
+<?php
+// Importa as configurações necessárias
+require_once __DIR__ . '/../../config/auth.php';
+require_once __DIR__ . '/../../config/helpers.php';
+
+// Verifica se o usuário está autenticado
+verificarAutenticacao();
+
+// O token CSRF é gerado no controlador e já deve estar na sessão
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Transportadora</title>
+    <link rel="stylesheet" href="/public/styles/cadastrar_transportadora.css">
 </head>
 <body>
     <div class="container">
         <h1>Cadastrar Nova Transportadora</h1>
         <form method="POST" action="/transportadoras">
+            <!-- Campo CSRF Token -->
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+
             <label for="codigo">Código:</label>
             <input type="text" name="codigo" id="codigo" required>
 
@@ -23,6 +42,9 @@
         <div class="import-section">
             <h1>Importar Transportadoras</h1>
             <form method="POST" enctype="multipart/form-data" action="/transportadoras">
+                <!-- Campo CSRF Token para importação -->
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+
                 <label for="csv_import">Arquivo CSV:</label>
                 <input type="file" name="csv_import" id="csv_import" accept=".csv" required>
 

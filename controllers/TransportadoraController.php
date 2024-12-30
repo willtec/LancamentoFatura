@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST['id'])) {
         'nome' => htmlspecialchars(trim($_POST['nome'])),
     ];
 
-    if (validarDadosTransportadora($dadosTransportadora) && Transportadora::cadastrar($dadosTransportadora)) {
+    if (validarDadosTransportadora($dadosTransportadora) && Transportadora::criar($dadosTransportadora)) {
         setMensagem('sucesso', 'Transportadora cadastrada com sucesso.');
         redirecionar('/LancamentoFatura/transportadoras');
     } else {
