@@ -2,25 +2,39 @@
 // Configurações para APIs
 header('Content-Type: application/json');
 
-require_once '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../config/helpers.php';
+
+// Inicializar conexão com o banco
+$pdo = getDBConnection();
 
 // Capturar o endpoint solicitado
 $request = $_SERVER['REQUEST_URI'];
 $request = strtok($request, '?'); // Ignorar parâmetros GET
 
 switch ($request) {
-    case '/api/transportadoras':
+    case '/api/transportadoras': // Endpoint para autocomplete de transportadoras
         if (isset($_GET['q'])) {
             $query = $_GET['q'];
-            $stmt = $pdo->prepare("SELECT id, codigo, nome FROM transportadora WHERE codigo LIKE :termo OR nome LIKE :termo LIMIT 10");
+
+            // Busca considerando nome, código ou CNPJ
+            $stmt = $pdo->prepare("
+                SELECT id, codigo, cnpj, nome 
+                FROM transportadora
+                WHERE 
+                    codigo LIKE :termo OR
+                    cnpj LIKE :termo OR
+                    nome LIKE :termo
+                LIMIT 10
+            ");
             $stmt->bindValue(':termo', "%$query%", PDO::PARAM_STR);
             $stmt->execute();
+
             $transportadoras = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode($transportadoras);
         } else {
-            $stmt = $pdo->query("SELECT id, codigo, nome FROM transportadora");
-            $transportadoras = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($transportadoras);
+            echo json_encode([]);
         }
         break;
 

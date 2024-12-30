@@ -68,6 +68,11 @@ switch (true) {
         include __DIR__ . '/../controllers/TransportadoraController.php';
         break;
 
+    // Rota para a API de transportadoras
+    case preg_match('#^/api/transportadoras$#', $request):
+        include __DIR__ . '/../routes/api.php';
+        break;
+
     // Rota para cadastrar transportadoras
     case $request === '/transportadoras/cadastrar':
         verificarAutenticacao();
