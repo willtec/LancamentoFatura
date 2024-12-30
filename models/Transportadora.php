@@ -22,16 +22,18 @@ class Transportadora
     {
         try {
             $pdo = getDBConnection();
-            $stmt = $pdo->prepare("
-                INSERT INTO transportadora (codigo, nome, cnpj) 
-                VALUES (:codigo, :nome, :cnpj)
-            ");
+            $stmt = $pdo->prepare("INSERT INTO transportadora (codigo, nome, cnpj, modificado_por, ativo)
+            VALUES (:codigo, :nome, :cnpj, :modificado_por, 1)");
 
-            return $stmt->execute([
-                'codigo' => htmlspecialchars($dados['codigo']),
-                'nome' => htmlspecialchars($dados['nome']),
-                'cnpj' => htmlspecialchars($dados['cnpj']),
+            $resultado = $stmt->execute([
+                'codigo' => $dados['codigo'],
+                'nome' => $dados['nome'],
+                'cnpj' => $dados['cnpj'],
+                'modificado_por' => $_SESSION['usuario']['id'] ?? null,
             ]);
+
+            error_log("Transportadora criada: " . json_encode($dados));
+            return $resultado;
         } catch (PDOException $e) {
             error_log("Erro ao criar transportadora: " . $e->getMessage());
             return false;
@@ -50,26 +52,25 @@ class Transportadora
                 return false;
             }
 
-            $query = "
+            $stmt = $pdo->prepare("
                 UPDATE transportadora 
                 SET codigo = :codigo, nome = :nome, cnpj = :cnpj, updated_at = NOW(), modificado_por = :modificado_por 
                 WHERE id = :id
-            ";
-
-            $stmt = $pdo->prepare($query);
+            ");
             $stmt->execute([
-                'codigo' => htmlspecialchars($dados['codigo']),
-                'nome' => htmlspecialchars($dados['nome']),
-                'cnpj' => htmlspecialchars($dados['cnpj']),
+                'codigo' => $dados['codigo'],
+                'nome' => $dados['nome'],
+                'cnpj' => $dados['cnpj'],
                 'modificado_por' => $usuarioId,
                 'id' => $id,
             ]);
 
+            error_log("Transportadora atualizada (ID: $id): " . json_encode($dados));
             return true;
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') { // Código SQL para violação de restrição UNIQUE
                 error_log("Erro de duplicidade ao atualizar transportadora: " . $e->getMessage());
-                setMensagem('erro', 'CNPJ já está em uso por outra transportadora.');
+                setMensagem('erro', 'CNPJ ou código já está em uso por outra transportadora.');
             } else {
                 error_log("Erro ao atualizar transportadora: " . $e->getMessage());
                 setMensagem('erro', 'Erro ao atualizar a transportadora. Tente novamente.');
@@ -78,26 +79,32 @@ class Transportadora
         }
     }
 
-    // exclui (oculta) uma transportadora
+    // Excluir (ocultar logicamente) uma transportadora
     public static function ocultar($id)
     {
         try {
-            $pdo = getDBConnection(); // Conexão com o banco de dados
+            $pdo = getDBConnection();
             $stmt = $pdo->prepare("UPDATE transportadora SET ativo = 0 WHERE id = :id");
-            return $stmt->execute(['id' => $id]); // Atualiza o campo 'ativo' para 0
+            $resultado = $stmt->execute(['id' => $id]);
+
+            error_log("Transportadora ocultada (ID: $id)");
+            return $resultado;
         } catch (PDOException $e) {
             error_log("Erro ao ocultar transportadora: " . $e->getMessage());
-            return false; // Retorna false se houver erro
+            return false;
         }
     }
 
-    // método ativar
+    // Tornar visível uma transportadora
     public static function ativar($id)
     {
         try {
             $pdo = getDBConnection();
             $stmt = $pdo->prepare("UPDATE transportadora SET ativo = 1 WHERE id = :id");
-            return $stmt->execute(['id' => $id]);
+            $resultado = $stmt->execute(['id' => $id]);
+
+            error_log("Transportadora ativada (ID: $id)");
+            return $resultado;
         } catch (PDOException $e) {
             error_log("Erro ao ativar transportadora: " . $e->getMessage());
             return false;
@@ -112,34 +119,11 @@ class Transportadora
             $stmt = $pdo->prepare("SELECT * FROM transportadora WHERE id = :id");
             $stmt->execute(['id' => $id]);
 
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+            error_log("Transportadora buscada (ID: $id): " . json_encode($resultado));
+            return $resultado;
         } catch (PDOException $e) {
             error_log("Erro ao buscar transportadora por ID: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    // Obter última atualização com usuário
-    public static function obterUltimaAtualizacaoComUsuario()
-    {
-        try {
-            $pdo = getDBConnection();
-            $query = "
-                SELECT
-                    MAX(f.data_lancamento) AS data,
-                    'faturas' AS tabela,
-                    COALESCE(
-                        (SELECT nome FROM usuarios WHERE id = f.modificado_por),
-                        'Alterado diretamente no banco'
-                    ) AS usuario
-                FROM faturas f
-            ";
-            $stmt = $pdo->query($query);
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            return $resultado ?: false;
-        } catch (PDOException $e) {
-            error_log("Erro ao buscar última atualização com responsável: " . $e->getMessage());
             return false;
         }
     }
@@ -153,17 +137,38 @@ class Transportadora
             $pdo->beginTransaction();
             $handle = fopen($arquivo, 'r');
 
-            while (($data = fgetcsv($handle, 1000, ',')) !== false) {
-                $stmt = $pdo->prepare("
-                    INSERT INTO transportadora (codigo, nome, cnpj) 
-                    VALUES (:codigo, :nome, :cnpj)
-                    ON DUPLICATE KEY UPDATE nome = VALUES(nome), cnpj = VALUES(cnpj)
-                ");
+            if (!$handle) {
+                throw new Exception('Não foi possível abrir o arquivo CSV.');
+            }
 
+            $headerLine = fgets($handle);
+            $header = str_getcsv($headerLine, ',');
+            error_log("Cabeçalho do CSV: " . json_encode($header));
+
+            if (!$header || $header !== ['codigo', 'nome', 'cnpj']) {
+                throw new Exception('Formato do arquivo CSV inválido. O cabeçalho deve ser: codigo, nome, cnpj.');
+            }
+
+            while (($line = fgets($handle)) !== false) {
+                $data = str_getcsv($line, ',');
+                if (count($data) !== 3) {
+                    throw new Exception('Dados inválidos no arquivo CSV.');
+                }
+
+                $stmt = $pdo->prepare("
+                    INSERT INTO transportadora (codigo, nome, cnpj, modificado_por, ativo) 
+                    VALUES (:codigo, :nome, :cnpj, :modificado_por, 1)
+                    ON DUPLICATE KEY UPDATE 
+                        nome = VALUES(nome),
+                        cnpj = VALUES(cnpj),
+                        updated_at = NOW(),
+                        modificado_por = :modificado_por
+                ");
                 $stmt->execute([
-                    'codigo' => htmlspecialchars($data[0]),
-                    'nome' => htmlspecialchars($data[1]),
-                    'cnpj' => htmlspecialchars($data[2]),
+                    'codigo' => $data[0],
+                    'nome' => $data[1],
+                    'cnpj' => $data[2],
+                    'modificado_por' => $_SESSION['usuario']['id'] ?? null,
                 ]);
             }
 
@@ -171,33 +176,13 @@ class Transportadora
             $pdo->commit();
             return true;
         } catch (Exception $e) {
+            if (isset($handle)) {
+                fclose($handle);
+            }
             $pdo->rollBack();
             error_log("Erro ao importar CSV: " . $e->getMessage());
+            setMensagem('erro', $e->getMessage());
             return false;
-        }
-    }
-
-    // Contar transportadoras com ou sem termo de busca
-    public static function contarTransportadoras($termo = '')
-    {
-        try {
-            $pdo = getDBConnection();
-
-            if (!empty($termo)) {
-                $sql = "SELECT COUNT(*) as total FROM transportadora WHERE nome LIKE :termo OR cnpj LIKE :termo";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(':termo', "%$termo%", PDO::PARAM_STR);
-            } else {
-                $sql = "SELECT COUNT(*) as total FROM transportadora";
-                $stmt = $pdo->prepare($sql);
-            }
-
-            $stmt->execute();
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $resultado['total'] ?? 0;
-        } catch (PDOException $e) {
-            error_log("Erro ao contar transportadoras: " . $e->getMessage());
-            return 0;
         }
     }
 
@@ -220,27 +205,38 @@ class Transportadora
             $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
 
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            error_log("Transportadoras listadas: " . json_encode($resultado));
+            return $resultado;
         } catch (PDOException $e) {
             error_log("Erro ao listar transportadoras com paginação: " . $e->getMessage());
             return [];
         }
     }
 
-    // Buscar transportadoras por termo
-    public static function buscarPorTermo($termo)
+    public static function contarTransportadoras($termo = '')
     {
         try {
             $pdo = getDBConnection();
-            $sql = "SELECT id, codigo, nome FROM transportadora WHERE codigo LIKE :termo OR nome LIKE :termo LIMIT 10";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':termo', "%$termo%", PDO::PARAM_STR);
+
+            if (!empty($termo)) {
+                $sql = "SELECT COUNT(*) as total FROM transportadora WHERE nome LIKE :termo OR cnpj LIKE :termo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':termo', "%$termo%", PDO::PARAM_STR);
+            } else {
+                $sql = "SELECT COUNT(*) as total FROM transportadora";
+                $stmt = $pdo->prepare($sql);
+            }
 
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            error_log("Total de transportadoras encontradas: " . $resultado['total']);
+            return $resultado['total'] ?? 0;
         } catch (PDOException $e) {
-            error_log("Erro ao buscar transportadoras por termo: " . $e->getMessage());
-            return [];
+            error_log("Erro ao contar transportadoras: " . $e->getMessage());
+            return 0;
         }
     }
 
@@ -251,7 +247,9 @@ class Transportadora
             $stmt = $pdo->prepare("SELECT * FROM transportadora WHERE cnpj = :cnpj LIMIT 1");
             $stmt->execute(['cnpj' => $cnpj]);
 
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+            error_log("Transportadora buscada por CNPJ ($cnpj): " . json_encode($resultado));
+            return $resultado;
         } catch (PDOException $e) {
             error_log("Erro ao buscar transportadora por CNPJ: " . $e->getMessage());
             return false;

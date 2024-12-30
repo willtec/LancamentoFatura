@@ -95,6 +95,17 @@ switch (true) {
         }
         break;
 
+    // Rota para importar transportadoras via CSV
+    case $request === '/transportadoras/import':
+        verificarAutenticacao();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            include __DIR__ . '/../controllers/TransportadoraController.php';
+        } else {
+            http_response_code(405); // Método não permitido
+            echo "Método não permitido";
+        }
+        break;
+
     // Página para listar transportadoras
     case $request === '/transportadoras/listar':
         verificarAutenticacao();

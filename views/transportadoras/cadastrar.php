@@ -23,32 +23,25 @@ if (!isset($_SESSION['csrf_token'])) {
 <body>
     <div class="container">
         <h1>Cadastrar Nova Transportadora</h1>
-        <form method="POST" action="/transportadoras">
-            <!-- Campo CSRF Token -->
+        <form id="form-manual" method="POST" action="/transportadoras/create">
+            <input type="hidden" name="action" value="create_single">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-
             <label for="codigo">Código:</label>
             <input type="text" name="codigo" id="codigo" required>
-
             <label for="nome">Nome:</label>
             <input type="text" name="nome" id="nome" required>
-
             <label for="cnpj">CNPJ:</label>
             <input type="text" name="cnpj" id="cnpj" required>
-
             <button type="submit">Cadastrar</button>
         </form>
 
         <div class="import-section">
             <h1>Importar Transportadoras</h1>
-            <form method="POST" enctype="multipart/form-data" action="/transportadoras">
-                <!-- Campo CSRF Token para importação -->
+            <form id="form-import" method="POST" enctype="multipart/form-data" action="/transportadoras/import">
+                <input type="hidden" name="action" value="import_csv">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-
-                <label for="csv_import">Arquivo CSV:</label>
                 <input type="file" name="csv_import" id="csv_import" accept=".csv" required>
-
-                <button type="submit">Importar</button>
+                <button type="submit">Enviar</button>
             </form>
         </div>
     </div>
