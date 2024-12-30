@@ -3,6 +3,7 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'will');
 define('DB_PASS', 'Reboot3!');
 define('DB_NAME', 'faturas');
+define('DB_CHARSET', 'utf8mb4');
 
 /**
  * Função para obter a conexão com o banco de dados.
@@ -15,7 +16,7 @@ function getDBConnection()
 
     if ($pdo === null) {
         try {
-            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
             $pdo = new PDO($dsn, DB_USER, DB_PASS);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
