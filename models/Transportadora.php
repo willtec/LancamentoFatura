@@ -240,6 +240,34 @@ class Transportadora
         }
     }
 
+    public static function obterUltimaAtualizacaoComUsuario()
+    {
+        try {
+            $pdo = getDBConnection();
+
+            // Consulta para obter a última atualização com o usuário
+            $sql = "
+                SELECT 
+                    t.updated_at AS data, 
+                    u.nome AS usuario, 
+                    'transportadoras' AS tabela
+                FROM transportadora t
+                LEFT JOIN usuarios u ON t.modificado_por = u.id
+                ORDER BY t.updated_at DESC
+                LIMIT 1
+            ";
+            $stmt = $pdo->query($sql);
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            error_log("Última atualização de transportadoras: " . json_encode($resultado));
+
+            return $resultado ?: null; // Retorna null se nenhum resultado for encontrado
+        } catch (PDOException $e) {
+            error_log("Erro ao obter última atualização de transportadoras: " . $e->getMessage());
+            return null;
+        }
+    }
+
     public static function buscarPorCnpj($cnpj)
     {
         try {
