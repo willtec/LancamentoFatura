@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Fatura</title>
-    <script src="/../public/scripts/buscatransportadora.js"></script>
+    <script src="/../public/scripts/cadastrar_fatura.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="/public/styles/cadastrar_fatura.css" rel="stylesheet">
 </head>
@@ -60,12 +60,11 @@
                 <div class="form-group">
                     <label for="valor" class="label">Valor</label>
                     <input
-                        type="number"
-                        step="0.01"
+                        type="text"
                         name="valor"
                         id="valor"
                         class="input-field"
-                        value="<?=htmlspecialchars($fatura['valor'] ?? '');?>"
+                        value="<?=htmlspecialchars($fatura['valor'] ?? 'R$ 0,00');?>"
                         required
                     >
                 </div>
