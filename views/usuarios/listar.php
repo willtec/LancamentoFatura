@@ -37,7 +37,7 @@
                                 <p>Gerencie todos os usuários do sistema</p>
                             </div>
                         </div>
-                        <a href="transportadoras/cadastrar" class="btn-primary">
+                        <a href="/usuarios/cadastrar" class="btn-primary">
                             <i class="fas fa-plus"></i>
                             Novo Usuário
                         </a>

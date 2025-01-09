@@ -45,43 +45,88 @@ $atualizacao_mais_recente = $datas_atualizacoes_filtradas[0] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/../public/styles/dashboard.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Bem-vindo, <?=htmlspecialchars($_SESSION['usuario']['nome'])?></h1>
-            <nav>
-                <a href="/LancamentoFatura/faturas">Faturas</a>
-                <a href="/LancamentoFatura/transportadoras">Transportadoras</a>
-                <a href="/LancamentoFatura/usuarios">Usuários</a>
-                <a href="/LancamentoFatura/logout" class="logout">Sair</a>
-            </nav>
+    <div class="dashboard">
+        <header class="header">
+            <div class="header-content">
+                <div class="user-welcome">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h1>Bem-vindo, <?=htmlspecialchars($_SESSION['usuario']['nome'])?></h1>
+                </div>
+                <nav class="nav-menu">
+                    <a href="/LancamentoFatura/faturas" class="nav-item">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Faturas</span>
+                    </a>
+                    <a href="/LancamentoFatura/transportadoras" class="nav-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Transportadoras</span>
+                    </a>
+                    <a href="/LancamentoFatura/usuarios" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="/LancamentoFatura/logout" class="nav-item logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </nav>
+            </div>
         </header>
 
-        <main>
-            <section class="cards">
+        <main class="main-content">
+            <div class="cards-grid">
                 <div class="card faturas">
-                    <h2>Faturas</h2>
-                    <span class="total"><?=htmlspecialchars($total_faturas)?></span>
+                    <div class="card-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="card-content">
+                        <h2>Faturas</h2>
+                        <span class="total"><?=htmlspecialchars($total_faturas)?></span>
+                        <p class="subtitle">Total de faturas registradas</p>
+                    </div>
                 </div>
+
                 <div class="card transportadoras">
-                    <h2>Transportadoras</h2>
-                    <span class="total"><?=htmlspecialchars($total_transportadoras)?></span>
+                    <div class="card-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="card-content">
+                        <h2>Transportadoras</h2>
+                        <span class="total"><?=htmlspecialchars($total_transportadoras)?></span>
+                        <p class="subtitle">Transportadoras cadastradas</p>
+                    </div>
                 </div>
+
                 <div class="card atualizacao">
-                    <h2>Última Atualização</h2>
-                    <span class="total">
-                        <?php if ($atualizacao_mais_recente): ?>
-                            <?=htmlspecialchars(date('d/m/Y H:i:s', strtotime($atualizacao_mais_recente['data'])))?>
-                            - <?=htmlspecialchars($atualizacao_mais_recente['tabela'])?>
-                            por <?=htmlspecialchars($atualizacao_mais_recente['usuario'])?>
-                        <?php else: ?>
-                            Não disponível
-                        <?php endif;?>
-                    </span>
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <h2>Última Atualização</h2>
+                        <span class="total">
+                            <?php if ($atualizacao_mais_recente): ?>
+                                <div class="update-info">
+                                    <div class="update-date">
+                                        <?=htmlspecialchars(date('d/m/Y H:i:s', strtotime($atualizacao_mais_recente['data'])))?>
+                                    </div>
+                                    <div class="update-details">
+                                        <?=htmlspecialchars($atualizacao_mais_recente['tabela'])?>
+                                        por <?=htmlspecialchars($atualizacao_mais_recente['usuario'])?>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="no-data">Não disponível</div>
+                            <?php endif;?>
+                        </span>
+                    </div>
                 </div>
-            </section>
+            </div>
         </main>
     </div>
 </body>
