@@ -53,8 +53,8 @@ class Transportadora
             }
 
             $stmt = $pdo->prepare("
-                UPDATE transportadora 
-                SET codigo = :codigo, nome = :nome, cnpj = :cnpj, updated_at = NOW(), modificado_por = :modificado_por 
+                UPDATE transportadora
+                SET codigo = :codigo, nome = :nome, cnpj = :cnpj, updated_at = NOW(), modificado_por = :modificado_por
                 WHERE id = :id
             ");
             $stmt->execute([
@@ -156,9 +156,9 @@ class Transportadora
                 }
 
                 $stmt = $pdo->prepare("
-                    INSERT INTO transportadora (codigo, nome, cnpj, modificado_por, ativo) 
+                    INSERT INTO transportadora (codigo, nome, cnpj, modificado_por, ativo)
                     VALUES (:codigo, :nome, :cnpj, :modificado_por, 1)
-                    ON DUPLICATE KEY UPDATE 
+                    ON DUPLICATE KEY UPDATE
                         nome = VALUES(nome),
                         cnpj = VALUES(cnpj),
                         updated_at = NOW(),
@@ -247,9 +247,9 @@ class Transportadora
 
             // Consulta para obter a última atualização com o usuário
             $sql = "
-                SELECT 
-                    t.updated_at AS data, 
-                    u.nome AS usuario, 
+                SELECT
+                    t.updated_at AS data,
+                    u.nome AS usuario,
                     'transportadoras' AS tabela
                 FROM transportadora t
                 LEFT JOIN usuarios u ON t.modificado_por = u.id

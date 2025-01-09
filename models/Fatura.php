@@ -80,7 +80,7 @@ class Fatura
 
             $query = "
                 UPDATE faturas
-                SET 
+                SET
                     transportadora_id = :transportadora_id,
                     numero_fatura = :numero_fatura,
                     vencimento = :vencimento,
@@ -131,11 +131,11 @@ class Fatura
         try {
             $pdo = getDBConnection();
             $query = "
-                SELECT 
-                    MAX(f.data_lancamento) AS data, 
-                    'faturas' AS tabela, 
+                SELECT
+                    MAX(f.data_lancamento) AS data,
+                    'faturas' AS tabela,
                     COALESCE(
-                        (SELECT nome FROM usuarios WHERE id = f.modificado_por), 
+                        (SELECT nome FROM usuarios WHERE id = f.modificado_por),
                         'Alterado diretamente no banco'
                     ) AS usuario
                 FROM faturas f

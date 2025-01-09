@@ -56,9 +56,12 @@
                                     class="search-input"
                                     value="<?=htmlspecialchars($dadosPaginacao['searchTerm'] ?? '')?>"
                                 >
-                                <button type="submit" class="btn-search">
-                                    Buscar
-                                </button>
+                                <button type="submit" class="btn-search">Buscar</button>
+
+                                <!-- Exibir o botão "Limpar" apenas se houver o parâmetro "search" na URL -->
+                                <?php if (isset($_GET['search'])): ?>
+                                    <a href="/LancamentoFatura/transportadoras" class="btn-clear">Limpar</a>
+                                <?php endif; ?>
                             </div>
                         </form>
                     </div>

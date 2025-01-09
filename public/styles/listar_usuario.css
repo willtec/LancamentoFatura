@@ -489,6 +489,24 @@ th {
   background: var(--bg-secondary);
 }
 
+.btn-clear {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 8px 12px;
+  background-color: #e74c3c;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-clear:hover {
+  background-color: #c0392b;
+}
+
 @media (max-width: 768px) {
   .content-container {
     padding: 1rem;

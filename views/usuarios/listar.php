@@ -66,22 +66,27 @@
                 </div>
 
                 <!-- search -->
-                    <div class="search-page-header">
-                        <div class="search-container">
-                        <form id="search-form" method="GET" action="/usuarios/listar">
-                            <div class="search-wrapper">
-                                <i class="fas fa-search search-icon"></i>
-                                <input
-                                    type="text"
-                                    name="search"
-                                    placeholder="Buscar usuário..."
-                                    class="search-input"
-                                    value="<?=htmlspecialchars($dadosPaginacao['searchTerm'] ?? '')?>"
-                                >
-                                <button type="submit" class="btn-search">Buscar</button>
-                            </div>
-                        </form>
+                <div class="search-container">
+                    <form id="search-form" method="GET" action="/usuarios/listar">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                name="search"
+                                placeholder="Buscar usuário..."
+                                class="search-input"
+                                value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+                            >
+                            <button type="submit" class="btn-search" id="refreshTable">Buscar</button>
+
+                            <!-- Exibir o botão "Limpar" apenas se houver o parâmetro "search" na URL -->
+                            <?php if (isset($_GET['search'])): ?>
+                                <a href="/usuarios/listar" class="btn-clear">Limpar</a>
+                            <?php endif; ?>
                         </div>
+                    </form>
+                </div>
 
                 <!-- Table Section -->
                 <div class="table-wrapper">
