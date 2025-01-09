@@ -54,6 +54,7 @@ $atualizacao_mais_recente = $datas_atualizacoes_filtradas[0] ?? null;
             <nav>
                 <a href="/LancamentoFatura/faturas">Faturas</a>
                 <a href="/LancamentoFatura/transportadoras">Transportadoras</a>
+                <a href="/LancamentoFatura/usuarios">Usuários</a>
                 <a href="/LancamentoFatura/logout" class="logout">Sair</a>
             </nav>
         </header>

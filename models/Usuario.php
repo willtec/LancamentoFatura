@@ -26,8 +26,7 @@ class Usuario
             }
 
             if (!password_verify($senha, $usuario['senha'])) {
-                error_log("Senha incorreta. Dados recebidos: Email - $email | Senha - $senha");
-                error_log("Hash armazenado no banco: {$usuario['senha']}");
+                error_log("Senha incorreta para o email: $email");
                 return false;
             }
 
@@ -55,21 +54,33 @@ class Usuario
      * @param string $nome
      * @param string $email
      * @param string $senha
+     * @param string $nivelAcesso
      * @return bool Retorna true se o usuário for criado com sucesso, false caso contrário.
      */
-    public static function criar($nome, $email, $senha)
+    public static function criar($nome, $email, $senha, $nivelAcesso = 'usuario_leitura')
     {
         try {
+            if (empty($nome) || empty($email) || empty($senha)) {
+                throw new InvalidArgumentException("Todos os campos são obrigatórios.");
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new InvalidArgumentException("Email inválido.");
+            }
+
             $pdo = getDBConnection();
             $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
 
-            $query = "INSERT INTO usuarios (nome, email, senha) VALUES (:nome, :email, :senha)";
+            $query = "INSERT INTO usuarios (nome, email, senha, nivel_acesso) VALUES (:nome, :email, :senha, :nivel_acesso)";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':nome', $nome);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':senha', $senhaHash);
+            $stmt->bindParam(':nivel_acesso', $nivelAcesso);
 
             return $stmt->execute();
+        } catch (InvalidArgumentException $e) {
+            error_log("Erro de validação ao criar usuário: " . $e->getMessage());
         } catch (PDOException $e) {
             error_log("Erro ao criar usuário: " . $e->getMessage());
         }
@@ -90,19 +101,28 @@ class Usuario
         try {
             $pdo = getDBConnection();
 
+            // Verificar se a senha foi enviada
+            $senhaHash = !empty($dados['senha']) ? password_hash($dados['senha'], PASSWORD_BCRYPT) : null;
+
+            if (!$senhaHash) {
+                $querySenhaAtual = "SELECT senha FROM usuarios WHERE id = :id";
+                $stmtSenhaAtual = $pdo->prepare($querySenhaAtual);
+                $stmtSenhaAtual->execute(['id' => $id]);
+                $senhaHash = $stmtSenhaAtual->fetchColumn();
+            }
+
             $query = "
                 UPDATE usuarios 
-                SET nome = :nome, email = :email, senha = :senha, modificado_por = :modificado_por 
+                SET nome = :nome, email = :email, senha = :senha, nivel_acesso = :nivel_acesso, modificado_por = :modificado_por 
                 WHERE id = :id
             ";
             $stmt = $pdo->prepare($query);
-
-            $senhaHash = password_hash($dados['senha'], PASSWORD_BCRYPT);
 
             $stmt->execute([
                 'nome' => $dados['nome'],
                 'email' => $dados['email'],
                 'senha' => $senhaHash,
+                'nivel_acesso' => $dados['nivel_acesso'],
                 'modificado_por' => $usuarioId,
                 'id' => $id,
             ]);
@@ -113,6 +133,113 @@ class Usuario
         }
 
         return false;
+    }
+
+    public static function verificarNome($nome)
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "SELECT COUNT(*) FROM usuarios WHERE nome = :nome";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':nome', $nome);
+            $stmt->execute();
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("Erro ao verificar nome: " . $e->getMessage());
+        }
+        return false;
+    }
+
+    public static function verificarEmail($email)
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "SELECT COUNT(*) FROM usuarios WHERE email = :email";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("Erro ao verificar email: " . $e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Exclui um usuário do sistema.
+     *
+     * @param int $id
+     * @return bool Retorna true se o usuário foi excluído com sucesso, false caso contrário.
+     */
+    public static function excluir($id)
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "DELETE FROM usuarios WHERE id = :id";
+            $stmt = $pdo->prepare($query);
+            return $stmt->execute([':id' => $id]);
+        } catch (PDOException $e) {
+            error_log("Erro ao excluir usuário: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Lista todos os usuários do sistema.
+     *
+     * @return array Retorna um array com os dados de todos os usuários.
+     */
+    public static function listarTodos()
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "SELECT id, nome, email, nivel_acesso, criado_em, atualizado_em FROM usuarios ORDER BY nome ASC";
+            $stmt = $pdo->query($query);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao listar usuários: " . $e->getMessage());
+        }
+
+        return [];
+    }
+
+    /**
+     * Busca um usuário pelo ID.
+     *
+     * @param int $id
+     * @return array|false Retorna os dados do usuário ou false se não encontrado.
+     */
+    public static function buscarPorId($id)
+    {
+        try {
+            $pdo = getDBConnection();
+            $query = "SELECT * FROM usuarios WHERE id = :id LIMIT 1";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar usuário por ID: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    public static function buscarPorTermo($termo)
+    {
+        try {
+            $pdo = getDBConnection(); // Obtém a conexão com o banco de dados
+            $query = "SELECT * FROM usuarios WHERE nome LIKE :termo OR email LIKE :termo";
+            $stmt = $pdo->prepare($query); // Corrigido para usar $pdo
+            $stmt->bindValue(':termo', '%' . $termo . '%', PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar usuários por termo: " . $e->getMessage());
+        }
+        return [];
     }
 
     /**
@@ -140,29 +267,6 @@ class Usuario
             return $resultado ?: false;
         } catch (PDOException $e) {
             error_log("Erro ao buscar última atualização com responsável: " . $e->getMessage());
-        }
-
-        return false;
-    }
-
-    /**
-     * Busca um usuário pelo ID.
-     *
-     * @param int $id
-     * @return array|false Retorna os dados do usuário ou false se não encontrado.
-     */
-    public static function buscarPorId($id)
-    {
-        try {
-            $pdo = getDBConnection();
-            $query = "SELECT * FROM usuarios WHERE id = :id LIMIT 1";
-            $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Erro ao buscar usuário por ID: " . $e->getMessage());
         }
 
         return false;

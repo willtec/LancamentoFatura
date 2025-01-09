@@ -50,6 +50,44 @@ switch (true) {
         include __DIR__ . '/../controllers/LogoutController.php';
         break;
 
+    // Rota para usuarios
+    case $request === '/usuarios':
+        verificarAutenticacao();
+        include __DIR__ . '/../controllers/UsuarioController.php';
+        UsuarioController::index();
+        break;
+
+    case $request === '/usuarios/listar':
+        verificarAutenticacao();
+        include __DIR__ . '/../controllers/UsuarioController.php';
+        UsuarioController::index();
+        break;
+
+    case $request === '/usuarios/cadastrar':
+        verificarAutenticacao();
+        include __DIR__ . '/../controllers/UsuarioController.php';
+        UsuarioController::criar();
+        break;
+
+    case preg_match('#^/usuarios/editar/(\d+)$#', $request, $matches):
+        verificarAutenticacao();
+        include __DIR__ . '/../controllers/UsuarioController.php';
+        UsuarioController::editar($matches[1]);
+        break;
+
+    case $request === '/usuarios/verificar':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            include __DIR__ . '/../controllers/UsuarioController.php';
+            UsuarioController::verificar();
+        }
+        break;
+
+    case preg_match('#^/usuarios/excluir/(\d+)$#', $request, $matches):
+        verificarAutenticacao();
+        include __DIR__ . '/../controllers/UsuarioController.php';
+        UsuarioController::excluir($matches[1]);
+        break;
+
     // Rota para listar faturas
     case $request === '/faturas':
         verificarAutenticacao();

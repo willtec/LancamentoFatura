@@ -1,17 +1,4 @@
-<?php
-// Importa as configurações necessárias
-require_once __DIR__ . '/../../config/auth.php';
-require_once __DIR__ . '/../../config/helpers.php';
-
-// Verifica se o usuário está autenticado
-verificarAutenticacao();
-
-// O token CSRF é gerado no controlador e já deve estar na sessão
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-?>
-
+<!-- cadastrar.php -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -39,9 +26,6 @@ if (!isset($_SESSION['csrf_token'])) {
                 <?php if (isset($fatura['id'])): ?>
                     <input type="hidden" name="id" value="<?=htmlspecialchars($fatura['id']);?>">
                 <?php endif;?>
-
-                <!-- Campo oculto para armazenar o transportadora_id -->
-                <input type="hidden" name="transportadora_id" id="transportadora_id" value="<?=htmlspecialchars($fatura['transportadora_id'] ?? '');?>">
 
                 <!-- Campo com autocomplete para Transportadora -->
                 <div class="form-group relative">
@@ -132,14 +116,13 @@ if (!isset($_SESSION['csrf_token'])) {
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const transportadoraInput = document.getElementById('transportadora');
-        const transportadoraIdInput = document.getElementById('transportadora_id'); // Campo oculto para ID
         const suggestionsList = document.getElementById('transportadora-suggestions');
 
         transportadoraInput.addEventListener('input', function() {
             const query = transportadoraInput.value.trim();
 
-            if (query.length >= 2) {
-                fetch(`/api/transportadoras?q=${encodeURIComponent(query)}`)
+            if (query.length >= 2) { // Mostrar sugestões apenas se a query tiver 2 caracteres ou mais
+                fetch(`/LancamentoFatura/routes/api.php?transportadoras&q=${encodeURIComponent(query)}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -153,11 +136,10 @@ if (!isset($_SESSION['csrf_token'])) {
                         if (data.length > 0) {
                             data.forEach(item => {
                                 const suggestionItem = document.createElement('li');
-                                suggestionItem.textContent = `${item.codigo} - ${item.nome} (${item.cnpj})`;
+                                suggestionItem.textContent = `${item.codigo} - ${item.nome}`;
                                 suggestionItem.classList.add('suggestion-item');
                                 suggestionItem.addEventListener('click', function() {
                                     transportadoraInput.value = item.nome;
-                                    transportadoraIdInput.value = item.id; // Define o ID no campo oculto
                                     suggestionsList.classList.add('hidden');
                                 });
                                 suggestionsList.appendChild(suggestionItem);
