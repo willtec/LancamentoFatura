@@ -10,15 +10,23 @@ require_once __DIR__ . '/../config/helpers.php';
 $pdo = getDBConnection();
 
 // Capturar o endpoint solicitado
-$request = $_SERVER['REQUEST_URI'];
-$request = strtok($request, '?'); // Ignorar parâmetros GET
+$requestUri = $_SERVER['REQUEST_URI'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
+$requestPath = strtok($requestUri, '?'); // Ignorar parâmetros GET
 
-switch ($request) {
-    case '/api/transportadoras': // Endpoint para autocomplete de transportadoras
-        if (isset($_GET['q'])) {
+// Função para responder com erro 404
+function respondNotFound() {
+    http_response_code(404);
+    echo json_encode(['erro' => 'Endpoint não encontrado']);
+}
+
+// Roteamento básico
+switch ($requestPath) {
+    case '/api/transportadoras':
+        if ($requestMethod === 'GET' && isset($_GET['q'])) {
             $query = $_GET['q'];
 
-            // Busca considerando nome, código ou CNPJ
+            // Busca por nome, código ou CNPJ
             $stmt = $pdo->prepare("
                 SELECT id, codigo, cnpj, nome 
                 FROM transportadora
@@ -39,13 +47,18 @@ switch ($request) {
         break;
 
     case '/api/faturas':
-        $stmt = $pdo->query("SELECT * FROM faturas");
-        $faturas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($faturas);
+        if ($requestMethod === 'GET') {
+            $stmt = $pdo->query("SELECT * FROM faturas");
+            $faturas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($faturas);
+        } else {
+            respondNotFound();
+        }
         break;
 
+    // Adicionar outros endpoints conforme necessário
+
     default:
-        http_response_code(404);
-        echo json_encode(['erro' => 'Endpoint não encontrado']);
+        respondNotFound();
         break;
 }

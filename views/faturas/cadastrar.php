@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Fatura</title>
+    <script src="/../public/scripts/buscatransportadora.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="/public/styles/cadastrar_fatura.css" rel="stylesheet">
 </head>
@@ -14,6 +15,7 @@
             <h1 class="text-2xl font-bold text-center py-4">Cadastro de Fatura</h1>
 
             <!-- Exibir mensagens de erro ou sucesso -->
+
             <?php if (isset($_SESSION['mensagem'])): ?>
                 <div class="mb-4 p-4 text-white <?=$_SESSION['mensagem']['tipo'] === 'sucesso' ? 'bg-green-500' : 'bg-red-500';?>">
                     <?=$_SESSION['mensagem']['texto'];?>
@@ -112,55 +114,5 @@
             </form>
         </div>
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const transportadoraInput = document.getElementById('transportadora');
-        const suggestionsList = document.getElementById('transportadora-suggestions');
-
-        transportadoraInput.addEventListener('input', function() {
-            const query = transportadoraInput.value.trim();
-
-            if (query.length >= 2) { // Mostrar sugestões apenas se a query tiver 2 caracteres ou mais
-                fetch(`/LancamentoFatura/routes/api.php?transportadoras&q=${encodeURIComponent(query)}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        suggestionsList.innerHTML = '';
-                        suggestionsList.classList.add('hidden');
-
-                        if (data.length > 0) {
-                            data.forEach(item => {
-                                const suggestionItem = document.createElement('li');
-                                suggestionItem.textContent = `${item.codigo} - ${item.nome}`;
-                                suggestionItem.classList.add('suggestion-item');
-                                suggestionItem.addEventListener('click', function() {
-                                    transportadoraInput.value = item.nome;
-                                    suggestionsList.classList.add('hidden');
-                                });
-                                suggestionsList.appendChild(suggestionItem);
-                            });
-
-                            suggestionsList.classList.remove('hidden');
-                        } else {
-                            suggestionsList.innerHTML = "<li class='px-4 py-2 text-gray-500'>Nenhuma transportadora encontrada</li>";
-                            suggestionsList.classList.remove('hidden');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao buscar sugestões:', error);
-                        suggestionsList.classList.add('hidden');
-                    });
-            } else {
-                suggestionsList.classList.add('hidden');
-            }
-        });
-    });
-    </script>
-
 </body>
 </html>
