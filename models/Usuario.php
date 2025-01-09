@@ -112,8 +112,8 @@ class Usuario
             }
 
             $query = "
-                UPDATE usuarios 
-                SET nome = :nome, email = :email, senha = :senha, nivel_acesso = :nivel_acesso, modificado_por = :modificado_por 
+                UPDATE usuarios
+                SET nome = :nome, email = :email, senha = :senha, nivel_acesso = :nivel_acesso, modificado_por = :modificado_por
                 WHERE id = :id
             ";
             $stmt = $pdo->prepare($query);
@@ -252,11 +252,11 @@ class Usuario
         try {
             $pdo = getDBConnection();
             $query = "
-                SELECT 
-                    MAX(u.atualizado_em) AS data, 
-                    'usuarios' AS tabela, 
+                SELECT
+                    MAX(u.atualizado_em) AS data,
+                    'usuarios' AS tabela,
                     COALESCE(
-                        (SELECT nome FROM usuarios WHERE id = u.modificado_por), 
+                        (SELECT nome FROM usuarios WHERE id = u.modificado_por),
                         'Alterado diretamente no banco'
                     ) AS usuario
                 FROM usuarios u

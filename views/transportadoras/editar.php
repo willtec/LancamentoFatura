@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar<?= !empty($transportadora['nome']) ? ' - ' . htmlspecialchars($transportadora['nome']) : '' ?></title>
+    <title>Editar<?=!empty($transportadora['nome']) ? ' - ' . htmlspecialchars($transportadora['nome']) : ''?></title>
     <link rel="stylesheet" href="/public/styles/editar_transportadora.css">
     <script src="/public/scripts/cnpj-validation.js"></script>
     <script src="/public/scripts/theme-toggle.js"></script>
@@ -34,13 +34,13 @@
             <div class="content-container">
                 <!-- Mensagens de Alerta -->
                 <?php if (!empty($_SESSION['mensagem']) && isset($_SESSION['mensagem']['tipo'], $_SESSION['mensagem']['texto'])): ?>
-                    <div class="alert alert-<?= htmlspecialchars($_SESSION['mensagem']['tipo']) ?>">
-                        <i class="fas fa-<?= $_SESSION['mensagem']['tipo'] === 'success' ? 'check-circle' : 'exclamation-circle' ?>"></i>
-                        <p><?= htmlspecialchars($_SESSION['mensagem']['texto']) ?></p>
+                    <div class="alert alert-<?=htmlspecialchars($_SESSION['mensagem']['tipo'])?>">
+                        <i class="fas fa-<?=$_SESSION['mensagem']['tipo'] === 'success' ? 'check-circle' : 'exclamation-circle'?>"></i>
+                        <p><?=htmlspecialchars($_SESSION['mensagem']['texto'])?></p>
                         <button class="alert-close" aria-label="Fechar" onclick="this.parentElement.style.display='none';">&times;</button>
                     </div>
-                    <?php unset($_SESSION['mensagem']); ?>
-                <?php endif; ?>
+                    <?php unset($_SESSION['mensagem']);?>
+                <?php endif;?>
 
                 <!-- Formulário de Edição -->
                 <?php if (!empty($transportadora)): ?>
@@ -49,7 +49,7 @@
                             <i class="fas fa-building header-icon"></i>
                             <div class="header-text">
                                 <h1>Editar Transportadora</h1>
-                                <p><?= htmlspecialchars($transportadora['nome']) ?></p>
+                                <p><?=htmlspecialchars($transportadora['nome'])?></p>
                             </div>
                         </div>
                     </div>
@@ -57,8 +57,8 @@
                     <div class="card">
                         <form class="edit-form" method="POST" action="/transportadoras/editar" onsubmit="return validarFormulario();">
                             <!-- CSRF e ID -->
-                            <input type="hidden" name="id" value="<?= htmlspecialchars($transportadora['id']) ?>">
-                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                            <input type="hidden" name="id" value="<?=htmlspecialchars($transportadora['id'])?>">
+                            <input type="hidden" name="csrf_token" value="<?=htmlspecialchars($_SESSION['csrf_token'])?>">
 
                             <!-- Campos do Formulário -->
                             <div class="form-grid">
@@ -68,13 +68,13 @@
                                         Código
                                     </label>
                                     <div class="input-wrapper">
-                                        <input 
-                                            type="text" 
-                                            id="codigo" 
-                                            name="codigo" 
-                                            value="<?= htmlspecialchars($transportadora['codigo']) ?>" 
-                                            required 
-                                            maxlength="20" 
+                                        <input
+                                            type="text"
+                                            id="codigo"
+                                            name="codigo"
+                                            value="<?=htmlspecialchars($transportadora['codigo'])?>"
+                                            required
+                                            maxlength="20"
                                             placeholder="Digite o código"
                                             autocomplete="off">
                                     </div>
@@ -86,13 +86,13 @@
                                         Nome da Transportadora
                                     </label>
                                     <div class="input-wrapper">
-                                        <input 
-                                            type="text" 
-                                            id="nome" 
-                                            name="nome" 
-                                            value="<?= htmlspecialchars($transportadora['nome']) ?>" 
-                                            required 
-                                            maxlength="100" 
+                                        <input
+                                            type="text"
+                                            id="nome"
+                                            name="nome"
+                                            value="<?=htmlspecialchars($transportadora['nome'])?>"
+                                            required
+                                            maxlength="100"
                                             placeholder="Digite o nome"
                                             autocomplete="off">
                                     </div>
@@ -104,14 +104,14 @@
                                         CNPJ
                                     </label>
                                     <div class="input-wrapper">
-                                        <input 
-                                            type="text" 
-                                            id="cnpj" 
-                                            name="cnpj" 
-                                            value="<?= htmlspecialchars($transportadora['cnpj']) ?>" 
-                                            required 
-                                            maxlength="18" 
-                                            pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}" 
+                                        <input
+                                            type="text"
+                                            id="cnpj"
+                                            name="cnpj"
+                                            value="<?=htmlspecialchars($transportadora['cnpj'])?>"
+                                            required
+                                            maxlength="18"
+                                            pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}"
                                             placeholder="00.000.000/0000-00"
                                             autocomplete="off">
                                         <div class="input-error"></div>
@@ -145,7 +145,7 @@
                             </a>
                         </div>
                     </div>
-                <?php endif; ?>
+                <?php endif;?>
             </div>
         </main>
     </div>

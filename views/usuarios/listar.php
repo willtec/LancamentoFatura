@@ -76,7 +76,7 @@
                                     name="search"
                                     placeholder="Buscar usuário..."
                                     class="search-input"
-                                    value="<?= htmlspecialchars($dadosPaginacao['searchTerm'] ?? '') ?>"
+                                    value="<?=htmlspecialchars($dadosPaginacao['searchTerm'] ?? '')?>"
                                 >
                                 <button type="submit" class="btn-search">Buscar</button>
                             </div>

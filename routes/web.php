@@ -20,7 +20,8 @@ if (strpos($request, $basePath) === 0) {
 $request = '/' . ltrim($request, '/');
 
 // Função para verificar autenticação
-function verificarAutenticacao() {
+function verificarAutenticacao()
+{
     if (!isset($_SESSION['usuario'])) {
         header('Location: /login');
         exit();

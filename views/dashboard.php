@@ -50,7 +50,7 @@ $atualizacao_mais_recente = $datas_atualizacoes_filtradas[0] ?? null;
 <body>
     <div class="container">
         <header>
-            <h1>Bem-vindo, <?= htmlspecialchars($_SESSION['usuario']['nome']) ?></h1>
+            <h1>Bem-vindo, <?=htmlspecialchars($_SESSION['usuario']['nome'])?></h1>
             <nav>
                 <a href="/LancamentoFatura/faturas">Faturas</a>
                 <a href="/LancamentoFatura/transportadoras">Transportadoras</a>
@@ -63,22 +63,22 @@ $atualizacao_mais_recente = $datas_atualizacoes_filtradas[0] ?? null;
             <section class="cards">
                 <div class="card faturas">
                     <h2>Faturas</h2>
-                    <span class="total"><?= htmlspecialchars($total_faturas) ?></span>
+                    <span class="total"><?=htmlspecialchars($total_faturas)?></span>
                 </div>
                 <div class="card transportadoras">
                     <h2>Transportadoras</h2>
-                    <span class="total"><?= htmlspecialchars($total_transportadoras) ?></span>
+                    <span class="total"><?=htmlspecialchars($total_transportadoras)?></span>
                 </div>
                 <div class="card atualizacao">
                     <h2>Última Atualização</h2>
                     <span class="total">
                         <?php if ($atualizacao_mais_recente): ?>
-                            <?= htmlspecialchars(date('d/m/Y H:i:s', strtotime($atualizacao_mais_recente['data']))) ?> 
-                            - <?= htmlspecialchars($atualizacao_mais_recente['tabela']) ?> 
-                            por <?= htmlspecialchars($atualizacao_mais_recente['usuario']) ?>
+                            <?=htmlspecialchars(date('d/m/Y H:i:s', strtotime($atualizacao_mais_recente['data'])))?>
+                            - <?=htmlspecialchars($atualizacao_mais_recente['tabela'])?>
+                            por <?=htmlspecialchars($atualizacao_mais_recente['usuario'])?>
                         <?php else: ?>
                             Não disponível
-                        <?php endif; ?>
+                        <?php endif;?>
                     </span>
                 </div>
             </section>

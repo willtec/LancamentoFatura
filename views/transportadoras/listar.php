@@ -92,32 +92,32 @@
                         </thead>
                         <tbody>
                         <?php
-                        // Função para formatar o CNPJ
-                        function formatarCNPJ($cnpj)
-                        {
-                            $cnpj = preg_replace('/\D/', '', $cnpj); // Remove caracteres não numéricos
-                            return preg_match('/^\d{14}$/', $cnpj)
-                                ? substr($cnpj, 0, 2) . '.' . substr($cnpj, 2, 3) . '.' . substr($cnpj, 5, 3) . '/' . substr($cnpj, 8, 4) . '-' . substr($cnpj, 12, 2)
-                                : $cnpj; // Retorna o CNPJ formatado ou o valor original se inválido
-                        }
-                        ?>
+// Função para formatar o CNPJ
+function formatarCNPJ($cnpj)
+{
+    $cnpj = preg_replace('/\D/', '', $cnpj); // Remove caracteres não numéricos
+    return preg_match('/^\d{14}$/', $cnpj)
+    ? substr($cnpj, 0, 2) . '.' . substr($cnpj, 2, 3) . '.' . substr($cnpj, 5, 3) . '/' . substr($cnpj, 8, 4) . '-' . substr($cnpj, 12, 2)
+    : $cnpj; // Retorna o CNPJ formatado ou o valor original se inválido
+}
+?>
 
                         <?php if (!empty($dadosPaginacao['transportadoras'])): ?>
                         <?php foreach ($dadosPaginacao['transportadoras'] as $transportadora): ?>
-                            <tr class="<?= $transportadora['ativo'] ? '' : 'row-inactive' ?>">
-                                <td><?= htmlspecialchars($transportadora['codigo']) ?></td>
-                                <td><?= htmlspecialchars($transportadora['nome']) ?></td>
-                                <td><?= htmlspecialchars(formatarCNPJ($transportadora['cnpj'])) ?></td>
+                            <tr class="<?=$transportadora['ativo'] ? '' : 'row-inactive'?>">
+                                <td><?=htmlspecialchars($transportadora['codigo'])?></td>
+                                <td><?=htmlspecialchars($transportadora['nome'])?></td>
+                                <td><?=htmlspecialchars(formatarCNPJ($transportadora['cnpj']))?></td>
                                 <td class="actions-column">
                                     <div class="action-buttons">
-                                        <a href="/transportadoras/editar/<?= htmlspecialchars($transportadora['id']) ?>"
+                                        <a href="/transportadoras/editar/<?=htmlspecialchars($transportadora['id'])?>"
                                         class="btn-action btn-edit"
                                         title="Editar">
                                             <i class="fas fa-edit"></i>
                                             <span>Editar</span>
                                         </a>
                                         <?php if ($transportadora['ativo']): ?>
-                                            <a href="/transportadoras/excluir/<?= htmlspecialchars($transportadora['id']) ?>"
+                                            <a href="/transportadoras/excluir/<?=htmlspecialchars($transportadora['id'])?>"
                                             class="btn-action btn-delete"
                                             title="Excluir"
                                             onclick="return confirm('Tem certeza que deseja excluir esta transportadora?');">
@@ -125,18 +125,18 @@
                                                 <span>Excluir</span>
                                             </a>
                                         <?php else: ?>
-                                            <a href="/transportadoras/ativar/<?= htmlspecialchars($transportadora['id']) ?>"
+                                            <a href="/transportadoras/ativar/<?=htmlspecialchars($transportadora['id'])?>"
                                             class="btn-action btn-activate"
                                             title="Tornar visível"
                                             onclick="return confirm('Deseja tornar esta transportadora visível novamente?');">
                                                 <i class="fas fa-eye"></i>
                                                 <span>Tornar Visível</span>
                                             </a>
-                                        <?php endif; ?>
+                                        <?php endif;?>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php endforeach;?>
                     <?php else: ?>
                         <tr class="no-results">
                             <td colspan="4">
@@ -146,7 +146,7 @@
                                 </div>
                             </td>
                         </tr>
-                    <?php endif; ?>
+                    <?php endif;?>
                         </tbody>
                     </table>
                 </div>
