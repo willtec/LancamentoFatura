@@ -1,0 +1,78 @@
+[10-Jan-2025 17:39:05 Europe/Berlin] Início do script web.php. URI requisitada: /
+[10-Jan-2025 17:39:05 Europe/Berlin] Processando a rota: /
+[10-Jan-2025 17:39:05 Europe/Berlin] Usuário autenticado.
+[10-Jan-2025 17:39:05 Europe/Berlin] Acessando: Dashboard
+[10-Jan-2025 17:39:05 Europe/Berlin] Conexão com o banco de dados estabelecida com sucesso.
+[10-Jan-2025 17:39:06 Europe/Berlin] Total de transportadoras encontradas: 81
+[10-Jan-2025 17:39:06 Europe/Berlin] Iniciando a listagem de todas as faturas.
+[10-Jan-2025 17:39:06 Europe/Berlin] Listagem concluída com sucesso. Total de faturas encontradas: 0
+[10-Jan-2025 17:39:06 Europe/Berlin] Última atualização de transportadoras: {"data":"2024-12-30 16:35:52","usuario":"Super Admin","tabela":"transportadoras"}
+[10-Jan-2025 17:39:06 Europe/Berlin] Buscando a última atualização de faturas com informações do usuário.
+[10-Jan-2025 17:39:06 Europe/Berlin] Última atualização encontrada: Array
+(
+    [data] => 
+    [tabela] => faturas
+    [usuario] => Alterado diretamente no banco
+)
+
+[10-Jan-2025 17:39:13 Europe/Berlin] Início do script web.php. URI requisitada: /LancamentoFatura/faturas
+[10-Jan-2025 17:39:13 Europe/Berlin] Processando a rota: /faturas
+[10-Jan-2025 17:39:13 Europe/Berlin] Usuário autenticado.
+[10-Jan-2025 17:39:13 Europe/Berlin] Acessando rota de faturas: /faturas
+[10-Jan-2025 17:39:13 Europe/Berlin] {"timestamp":"2025-01-10 17:39:13","requestId":"req_67814d31a41792.30362746","nivel":"INFO","mensagem":"M\u00e9todo HTTP recebido: GET","dados":{"acao":null}}
+[10-Jan-2025 17:39:13 Europe/Berlin] {"timestamp":"2025-01-10 17:39:13","requestId":"req_67814d31a41792.30362746","nivel":"INFO","mensagem":"Exibindo lista de faturas.","dados":[]}
+[10-Jan-2025 17:39:13 Europe/Berlin] Iniciando a listagem de todas as faturas.
+[10-Jan-2025 17:39:13 Europe/Berlin] Conexão com o banco de dados estabelecida com sucesso.
+[10-Jan-2025 17:39:13 Europe/Berlin] Listagem concluída com sucesso. Total de faturas encontradas: 0
+[10-Jan-2025 17:39:13 Europe/Berlin] Arquivo da classe não encontrado: C:\xampp\htdocs\LancamentoFatura/FaturaController.php
+[10-Jan-2025 17:39:13 Europe/Berlin] PHP Fatal error:  Uncaught Error: Class "FaturaController" not found in C:\xampp\htdocs\LancamentoFatura\routes\web.php:90
+Stack trace:
+#0 C:\xampp\htdocs\LancamentoFatura\index.php(20): require_once()
+#1 {main}
+  thrown in C:\xampp\htdocs\LancamentoFatura\routes\web.php on line 90
+[10-Jan-2025 17:41:09 Europe/Berlin] Início do script web.php. URI requisitada: /LancamentoFatura/faturas
+[10-Jan-2025 17:41:09 Europe/Berlin] Processando a rota: /faturas
+[10-Jan-2025 17:41:09 Europe/Berlin] Usuário autenticado.
+[10-Jan-2025 17:41:09 Europe/Berlin] Acessando rota de faturas: /faturas
+[10-Jan-2025 17:41:09 Europe/Berlin] {"timestamp":"2025-01-10 17:41:09","requestId":"req_67814da5b113a5.63884193","nivel":"INFO","mensagem":"M\u00e9todo HTTP recebido: GET","dados":{"acao":null}}
+[10-Jan-2025 17:41:09 Europe/Berlin] {"timestamp":"2025-01-10 17:41:09","requestId":"req_67814da5b113a5.63884193","nivel":"INFO","mensagem":"Exibindo lista de faturas.","dados":[]}
+[10-Jan-2025 17:41:09 Europe/Berlin] Iniciando a listagem de todas as faturas.
+[10-Jan-2025 17:41:09 Europe/Berlin] Conexão com o banco de dados estabelecida com sucesso.
+[10-Jan-2025 17:41:09 Europe/Berlin] Listagem concluída com sucesso. Total de faturas encontradas: 0
+[10-Jan-2025 17:41:09 Europe/Berlin] Arquivo da classe não encontrado: C:\xampp\htdocs\LancamentoFatura/FaturaController.php
+[10-Jan-2025 17:41:09 Europe/Berlin] PHP Fatal error:  Uncaught Error: Class "FaturaController" not found in C:\xampp\htdocs\LancamentoFatura\routes\web.php:90
+Stack trace:
+#0 C:\xampp\htdocs\LancamentoFatura\index.php(20): require_once()
+#1 {main}
+  thrown in C:\xampp\htdocs\LancamentoFatura\routes\web.php on line 90
+[10-Jan-2025 18:09:10 Europe/Berlin] Início do script web.php. URI requisitada: /
+[10-Jan-2025 18:09:10 Europe/Berlin] Processando a rota: /
+[10-Jan-2025 18:09:10 Europe/Berlin] Usuário autenticado.
+[10-Jan-2025 18:09:10 Europe/Berlin] Acessando: Dashboard
+[10-Jan-2025 18:09:10 Europe/Berlin] Conexão com o banco de dados estabelecida com sucesso.
+[10-Jan-2025 18:09:10 Europe/Berlin] Total de transportadoras encontradas: 81
+[10-Jan-2025 18:09:10 Europe/Berlin] Iniciando a listagem de todas as faturas.
+[10-Jan-2025 18:09:10 Europe/Berlin] Listagem concluída com sucesso. Total de faturas encontradas: 0
+[10-Jan-2025 18:09:10 Europe/Berlin] Última atualização de transportadoras: {"data":"2024-12-30 16:35:52","usuario":"Super Admin","tabela":"transportadoras"}
+[10-Jan-2025 18:09:10 Europe/Berlin] Buscando a última atualização de faturas com informações do usuário.
+[10-Jan-2025 18:09:10 Europe/Berlin] Última atualização encontrada: Array
+(
+    [data] => 
+    [tabela] => faturas
+    [usuario] => Alterado diretamente no banco
+)
+
+[10-Jan-2025 18:15:06 Europe/Berlin] Início do script web.php. URI requisitada: /
+[10-Jan-2025 18:15:06 Europe/Berlin] Conexão com o banco de dados estabelecida com sucesso.
+[10-Jan-2025 18:15:06 Europe/Berlin] Total de transportadoras encontradas: 81
+[10-Jan-2025 18:15:06 Europe/Berlin] Iniciando a listagem de todas as faturas.
+[10-Jan-2025 18:15:06 Europe/Berlin] Listagem concluída com sucesso. Total de faturas encontradas: 0
+[10-Jan-2025 18:15:06 Europe/Berlin] Última atualização de transportadoras: {"data":"2024-12-30 16:35:52","usuario":"Super Admin","tabela":"transportadoras"}
+[10-Jan-2025 18:15:06 Europe/Berlin] Buscando a última atualização de faturas com informações do usuário.
+[10-Jan-2025 18:15:06 Europe/Berlin] Última atualização encontrada: Array
+(
+    [data] => 
+    [tabela] => faturas
+    [usuario] => Alterado diretamente no banco
+)
+

@@ -6,6 +6,8 @@ class Fatura
     // Método para listar todas as faturas
     public static function listarTodas()
     {
+        error_log("Iniciando a listagem de todas as faturas.");
+
         try {
             $pdo = getDBConnection();
             $query = "
@@ -14,7 +16,10 @@ class Fatura
                 LEFT JOIN transportadora t ON f.transportadora_id = t.id
             ";
             $stmt = $pdo->query($query);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $faturas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            error_log("Listagem concluída com sucesso. Total de faturas encontradas: " . count($faturas));
+            return $faturas;
         } catch (PDOException $e) {
             error_log("Erro ao listar faturas: " . $e->getMessage());
             return false;
@@ -24,6 +29,9 @@ class Fatura
     // Método para criar uma nova fatura
     public static function cadastrar($dados)
     {
+        error_log("Iniciando o cadastro de uma nova fatura.");
+        error_log("Dados recebidos no modelo: " . print_r($dados, true));
+
         try {
             $pdo = getDBConnection();
             $pdo->beginTransaction();
@@ -45,9 +53,10 @@ class Fatura
             ]);
 
             $pdo->commit();
+            error_log("Fatura cadastrada com sucesso no banco de dados.");
             return true;
         } catch (Exception $e) {
-            error_log("Erro ao criar fatura: " . $e->getMessage());
+            error_log("Erro ao cadastrar fatura: " . $e->getMessage());
             $pdo->rollBack();
             return false;
         }
@@ -56,6 +65,8 @@ class Fatura
     // Método para buscar uma fatura pelo ID
     public static function buscarPorId($id)
     {
+        error_log("Iniciando a busca por uma fatura. ID: $id");
+
         try {
             $pdo = getDBConnection();
             $stmt = $pdo->prepare(
@@ -65,7 +76,15 @@ class Fatura
                 WHERE f.id = :id"
             );
             $stmt->execute(['id' => $id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $fatura = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($fatura) {
+                error_log("Fatura encontrada: " . print_r($fatura, true));
+            } else {
+                error_log("Nenhuma fatura encontrada com o ID fornecido.");
+            }
+
+            return $fatura;
         } catch (PDOException $e) {
             error_log("Erro ao buscar fatura: " . $e->getMessage());
             return false;
@@ -75,6 +94,9 @@ class Fatura
     // Método para atualizar os dados de uma fatura existente
     public static function atualizar($id, $dados, $usuarioId)
     {
+        error_log("Iniciando atualização da fatura. ID: $id");
+        error_log("Dados recebidos para atualização: " . print_r($dados, true));
+
         try {
             $pdo = getDBConnection();
 
@@ -103,21 +125,25 @@ class Fatura
                 'id' => $id,
             ]);
 
+            error_log("Fatura atualizada com sucesso. ID: $id");
             return true;
         } catch (PDOException $e) {
             error_log("Erro ao atualizar fatura: " . $e->getMessage());
+            return false;
         }
-
-        return false;
     }
 
     // Método para remover uma fatura do banco de dados
     public static function deletar($id)
     {
+        error_log("Iniciando exclusão da fatura. ID: $id");
+
         try {
             $pdo = getDBConnection();
             $stmt = $pdo->prepare("DELETE FROM faturas WHERE id = :id");
             $stmt->execute(['id' => $id]);
+
+            error_log("Fatura excluída com sucesso. ID: $id");
             return true;
         } catch (PDOException $e) {
             error_log("Erro ao deletar fatura: " . $e->getMessage());
@@ -128,6 +154,8 @@ class Fatura
     // Método para obter a última atualização das faturas com dados do usuário
     public static function obterUltimaAtualizacaoComUsuario()
     {
+        error_log("Buscando a última atualização de faturas com informações do usuário.");
+
         try {
             $pdo = getDBConnection();
             $query = "
@@ -142,6 +170,12 @@ class Fatura
             ";
             $stmt = $pdo->query($query);
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                error_log("Última atualização encontrada: " . print_r($resultado, true));
+            } else {
+                error_log("Nenhuma atualização encontrada.");
+            }
 
             return $resultado ?: false;
         } catch (PDOException $e) {

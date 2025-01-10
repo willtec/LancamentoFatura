@@ -1,6 +1,22 @@
 <?php
 // Este arquivo gerencia as rotas do sistema
 
+// Configuração de logs
+$logFile = __DIR__ . '/../logs/app.log'; // Ajuste o caminho conforme necessário
+
+// Garantir que o diretório de logs existe
+if (!is_dir(__DIR__ . '/../logs')) {
+    mkdir(__DIR__ . '/../logs', 0755, true);
+}
+
+// Configurar o PHP para registrar os erros
+ini_set('log_errors', 'On'); // Ativar o registro de erros
+ini_set('error_log', $logFile); // Definir o arquivo de log
+error_reporting(E_ALL); // Registrar todos os tipos de erros
+
+// Teste inicial para confirmar que o log está funcionando
+error_log("Início do script web.php. URI requisitada: " . ($_SERVER['REQUEST_URI'] ?? 'Indefinida'));
+
 // Iniciar a sessão apenas se não estiver ativa
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
